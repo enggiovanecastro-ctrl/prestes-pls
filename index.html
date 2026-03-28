@@ -300,9 +300,49 @@
             color: #ff6b6b;
             margin-bottom: 20px;
         }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 10, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--verde-lima);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--verde-lima);
+            font-size: 16px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Carregando Dashboard PLS...</div>
+    </div>
+
     <!-- Header -->
     <div class="header">
         <div class="header-content">
@@ -472,20 +512,49 @@
         // ==========================================
         async function loadData() {
             try {
-                const response = await fetch('data/pls_data.json');
+                console.log('Iniciando carregamento de dados...');
                 
+                // Tentativa 1: Path relativo (funciona no GitHub Pages)
+                let response = await fetch('./data/pls_data.json', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                    cache: 'no-cache'
+                });
+
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    console.warn('Falha no path relativo, tentando alternativa...');
+                    // Tentativa 2: Path sem ./
+                    response = await fetch('data/pls_data.json', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                        cache: 'no-cache'
+                    });
                 }
 
-                plsData = await response.json();
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: Não foi possível carregar o arquivo JSON`);
+                }
+
+                const text = await response.text();
+                console.log('JSON recebido, tamanho:', text.length, 'bytes');
+                console.log('Primeiros 200 chars:', text.substring(0, 200));
+
+                plsData = JSON.parse(text);
                 
                 // Validate data structure
                 if (!plsData || !plsData.PORT || !plsData.meta) {
-                    throw new Error('Estrutura do JSON inválida');
+                    throw new Error('Estrutura do JSON inválida. Esperado: {meta, PORT, SNAP_DATA, BP_DATA}');
                 }
 
-                console.log('Dados carregados:', plsData);
+                console.log('✅ Dados carregados com sucesso!', {
+                    total_obras: plsData.meta.total_obras,
+                    snapshot_atual: plsData.meta.snapshot_atual,
+                    obras_ativas: plsData.PORT.obras.filter(o => o.t > 0).length
+                });
                 
                 // Initialize dashboard
                 populateFilters();
@@ -493,14 +562,36 @@
                 createCharts();
                 populatePortfolioTable();
                 
+                // Hide loading overlay
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+                
             } catch (error) {
-                console.error('Erro ao carregar dados:', error);
-                document.querySelector('.container').insertAdjacentHTML('afterbegin', 
-                    `<div class="error">
-                        <strong>Erro ao carregar dados:</strong> ${error.message}<br>
-                        Certifique-se de que o arquivo data/pls_data.json existe e está acessível.
-                    </div>`
-                );
+                console.error('❌ Erro ao carregar dados:', error);
+                
+                // Hide loading overlay
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.innerHTML = `
+                    <strong>⚠️ Erro ao carregar dados:</strong><br>
+                    ${error.message}<br><br>
+                    <strong>Verificações:</strong><br>
+                    1. Você está acessando via GitHub Pages? (https://enggiovanecastro-ctrl.github.io/prestes-pls/)<br>
+                    2. O arquivo <code>data/pls_data.json</code> existe no repositório?<br>
+                    3. Aguardou 1-2 minutos após o último commit?<br><br>
+                    <strong>Debug:</strong> Abra o Console (F12) para detalhes técnicos.<br><br>
+                    <button onclick="location.reload()" style="background: var(--verde-lima); color: var(--verde-escuro); border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                        🔄 Tentar Novamente
+                    </button>
+                `;
+                document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.tabs'));
             }
         }
 
