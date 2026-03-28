@@ -710,22 +710,8 @@ const PORT={"obras":[{"e":"Ideal.e Copel 1","t":81576744,"r":0,"a":81576744,"s":
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     })
-    .then(payload => {
-      // O JSON tem estrutura: { meta, PORT, SNAP_DATA, BP_DATA, DATA }
-      let arr;
-      if (Array.isArray(payload)) {
-        // Formato legado: array direto
-        arr = payload;
-      } else if (payload.DATA && Array.isArray(payload.DATA)) {
-        arr = payload.DATA;
-        // Sobrescrever PORT com dados frescos do GitHub se disponível
-        if (payload.PORT) {
-          Object.assign(PORT, payload.PORT);
-        }
-      } else {
-        throw new Error('Chave DATA não encontrada. Chaves disponíveis: ' + Object.keys(payload).join(', '));
-      }
-      if (arr.length === 0) throw new Error('Array DATA está vazio');
+    .then(arr => {
+      if (!Array.isArray(arr)) throw new Error('Resposta não é um array');
       _resolveData(arr);
     })
     .catch(err => {
