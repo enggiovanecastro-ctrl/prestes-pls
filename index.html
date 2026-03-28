@@ -1,0 +1,2438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PLS — Prestes Construtora</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--vl:#84E115;--ve:#044D41;--bg:#08090a;--bg2:#0f1012;--bg3:#16181b;--card:#1a1c1f;--b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.03);--bvl:rgba(132,225,21,.15);--txt:#e0e0e0;--muted:#555;--muted2:#888}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+.tab-nav{background:#070809;border-bottom:2px solid var(--b1);display:flex;align-items:center;padding:0 24px;gap:2px;flex-shrink:0;height:40px}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted2);padding:0 20px;height:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:7px}
+.tab-btn:hover{color:var(--txt)}
+.tab-btn.active{color:var(--vl);border-bottom-color:var(--vl)}
+.tab-pane{display:none;flex:1;overflow:hidden;flex-direction:column;min-height:0}
+.tab-pane.active{display:flex}
+
+:root {
+  --vl:#84E115; --ve:#044D41;
+  --bg:#08090a; --bg2:#0f1012; --bg3:#16181b; --card:#1a1c1f;
+  --b1:rgba(255,255,255,.06); --b2:rgba(255,255,255,.03);
+  --txt:#e8e8e8; --muted:#555; --muted2:#888;
+  --real:#84E115; --arealizar:#3b82f6; --tend:#f5a623;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;flex-direction:column}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(90deg,#044D41 0%,#032e27 100%);padding:14px 28px;display:flex;align-items:center;gap:16px;border-bottom:1px solid rgba(132,225,21,.1);flex-shrink:0}
+.logo{width:36px;height:36px;background:var(--vl);border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:16px;color:#044D41;flex-shrink:0}
+.htitle{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:17px;color:#fff;letter-spacing:-.01em}
+.hsub{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.06em;margin-top:2px;text-transform:uppercase}
+.hspace{flex:1}
+.snap-info{font-size:11px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:8px}
+.snap-badge{background:rgba(132,225,21,.12);border:1px solid rgba(132,225,21,.25);color:var(--vl);font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px}
+
+/* ── CONTROLS ── */
+.ctrl{background:var(--bg2);border-bottom:1px solid var(--b1);padding:10px 28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lbl{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+select{background:var(--bg3);border:1px solid var(--b1);color:var(--txt);padding:6px 10px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer}
+select option{background:#1a1c1f}
+.sep{width:1px;height:22px;background:var(--b1);flex-shrink:0}
+.tgl{display:flex;background:var(--bg3);border:1px solid var(--b1);border-radius:7px;overflow:hidden}
+.tgl button{background:none;border:none;color:var(--muted2);padding:5px 13px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.tgl button.on{background:rgba(132,225,21,.14);color:var(--vl)}
+
+/* ── LAYOUT PRINCIPAL ── */
+.page{flex:1;padding:20px 28px;display:flex;flex-direction:column;gap:16px;overflow-y:auto}
+
+/* ── HERO ROW: KPIs grandes ── */
+.hero{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr;gap:14px}
+.hcard{background:var(--card);border:1px solid var(--b1);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:4px}
+.hcard-accent{position:absolute;top:0;left:0;bottom:0;width:3px;border-radius:12px 0 0 12px}
+.hcard-lbl{font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.hcard-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.hcard-sub{font-size:11px;color:var(--muted2);margin-top:2px}
+.hcard-bar{height:3px;background:rgba(255,255,255,.05);border-radius:99px;margin-top:10px;overflow:hidden}
+.hcard-bar-fill{height:100%;border-radius:99px;transition:width .8s ease}
+
+/* Card do pico anual tem layout especial */
+.hcard-anos{display:flex;gap:0;margin-top:10px}
+.ano-mini{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.ano-mini-bar{width:100%;background:rgba(255,255,255,.04);border-radius:3px;position:relative;overflow:hidden;height:32px;display:flex;align-items:flex-end}
+.ano-mini-fill{width:100%;border-radius:3px;transition:height .6s ease}
+.ano-mini-lbl{font-size:8.5px;color:var(--muted);font-weight:600}
+.ano-mini-val{font-size:8px;color:var(--muted2)}
+
+/* ── MEIO: gráfico principal + mapa de obras ── */
+.mid{display:grid;grid-template-columns:1.8fr 1fr;gap:14px}
+.card{background:var(--card);border:1px solid var(--b1);border-radius:12px;padding:16px 18px}
+.card-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:8px}
+.card-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;font-weight:700;color:var(--txt)}
+.card-sub{font-size:10.5px;color:var(--muted);margin-top:2px}
+
+/* ── GRÁFICO FLUXO: barras mensais com linha acumulada ── */
+.chart-wrap{position:relative;width:100%;height:240px}
+
+/* ── MAPA DE OBRAS: treemap estilo ── */
+.obras-grid{display:flex;flex-direction:column;gap:5px;height:240px;overflow-y:auto}
+.obra-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--b2);cursor:default}
+.obra-row:last-child{border:none}
+.obra-rank{font-size:9px;font-weight:700;color:var(--muted);width:14px;flex-shrink:0;text-align:right}
+.obra-name{font-size:11.5px;color:var(--txt);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.obra-bar-wrap{width:90px;height:5px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden;flex-shrink:0}
+.obra-bar-r{height:100%;border-radius:99px;background:var(--vl);transition:width .5s}
+.obra-val{font-size:10px;color:var(--muted2);width:44px;text-align:right;flex-shrink:0}
+.obra-pct{font-size:9px;width:28px;text-align:right;flex-shrink:0;font-weight:600}
+
+/* ── TABELA PIPELINE ── */
+.pipe-table table{width:100%;border-collapse:collapse;font-size:11.5px}
+.pipe-table thead th{background:var(--bg3);padding:7px 10px;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;white-space:nowrap;border-bottom:1px solid var(--b1);text-align:right}
+.pipe-table thead th:first-child{text-align:left}
+.pipe-table tbody tr{border-bottom:1px solid var(--b2);transition:background .1s}
+.pipe-table tbody tr:hover{background:rgba(255,255,255,.02)}
+.pipe-table tbody td{padding:6px 10px;text-align:right;white-space:nowrap}
+.pipe-table tbody td:first-child{text-align:left}
+.pipe-table .tot td{border-top:1px solid rgba(255,255,255,.08);font-weight:700;background:rgba(255,255,255,.01)}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle;flex-shrink:0}
+.pill{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700}
+.pg{background:rgba(132,225,21,.12);color:var(--vl)}
+.pa{background:rgba(245,166,35,.12);color:#f5a623}
+.pb{background:rgba(59,130,246,.14);color:#6ab3f5}
+.pr{background:rgba(248,113,113,.12);color:#f87171}
+
+#pane-port .page{overflow-y:auto;flex:1}
+
+:root {
+  --vl:#84E115; --ve:#044D41;
+  --bg:#0b0b0b; --bg2:#111; --bg3:#181818; --card:#1c1c1c;
+  --b1:rgba(255,255,255,.06); --b2:rgba(255,255,255,.04);
+  --bvl:rgba(132,225,21,.15);
+  --txt:#e0e0e0; --muted:#666; --muted2:#888;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* HEADER */
+.hdr{background:linear-gradient(90deg,#044D41,#032f29);padding:12px 24px;display:flex;align-items:center;gap:14px;border-bottom:1px solid rgba(132,225,21,.12);flex-shrink:0;flex-wrap:wrap;gap:10px}
+.logo{width:34px;height:34px;background:var(--vl);border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:15px;color:#044D41;flex-shrink:0}
+.htitle{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;color:#fff}
+.hsub{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.05em;margin-top:1px}
+.hspace{flex:1}
+
+/* TOP BAR */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--b1);padding:10px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap}
+.lbl{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+select{background:var(--bg3);border:1px solid var(--b1);color:var(--txt);padding:7px 10px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12.5px;cursor:pointer}
+select:focus{outline:none;border-color:rgba(132,225,21,.35)}
+select option{background:#1c1c1c}
+.sep{width:1px;height:24px;background:var(--b1);flex-shrink:0}
+.periodo-wrap{display:flex;align-items:center;gap:7px}
+.periodo-wrap select{min-width:96px}
+.periodo-wrap span{color:var(--muted);font-size:12px;font-weight:600}
+
+/* BODY: sem sidebar */
+.body{display:flex;flex:1;overflow:hidden}
+
+/* PAINEL DE SNAPSHOTS (colapsável, acima do conteúdo) */
+.snap-panel{background:var(--bg2);border-bottom:1px solid var(--b1);flex-shrink:0;overflow:hidden;transition:max-height .25s ease}
+.snap-panel.collapsed{max-height:0 !important;border-bottom:none}
+.snap-panel-inner{padding:12px 20px 14px}
+
+/* Header do painel */
+.sp-hdr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.sp-hdr-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:var(--txt);letter-spacing:.03em;white-space:nowrap}
+.sp-hdr-sep{width:1px;height:16px;background:var(--b1);flex-shrink:0}
+
+/* Atalhos rápidos */
+.quick-btn{background:rgba(255,255,255,.04);border:1px solid var(--b1);color:var(--muted2);padding:3px 10px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .12s}
+.quick-btn:hover{border-color:rgba(132,225,21,.3);color:var(--vl);background:rgba(132,225,21,.06)}
+.quick-btn.active{border-color:rgba(132,225,21,.4);color:var(--vl);background:rgba(132,225,21,.1)}
+.quick-group{display:flex;gap:4px;flex-wrap:wrap}
+.quick-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;white-space:nowrap;align-self:center}
+
+/* Grid de snapshots */
+.snap-grid{display:flex;flex-wrap:wrap;gap:5px}
+
+/* SNAP ITEM — horizontal compacto */
+.snap-item{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;cursor:pointer;border:1px solid var(--b1);background:rgba(255,255,255,.02);transition:all .12s;user-select:none;white-space:nowrap}
+.snap-item:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.snap-item.active{background:var(--acc-bg,rgba(132,225,21,.1));border-color:var(--acc-border,rgba(132,225,21,.35))}
+.snap-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--muted);transition:background .12s}
+.snap-item.active .snap-dot{background:var(--acc-color,var(--vl))}
+.snap-label{font-size:11.5px;font-weight:500;color:var(--muted2);transition:color .12s}
+.snap-item.active .snap-label{color:var(--txt);font-weight:700}
+.snap-pct{font-size:9.5px;color:var(--muted);transition:color .12s}
+.snap-item.active .snap-pct{color:var(--acc-color,var(--vl));opacity:.85}
+
+/* MAIN — ocupa tudo */
+.main{flex:1;overflow-y:auto;padding:18px 24px;display:flex;flex-direction:column;gap:16px}
+.main::-webkit-scrollbar{width:4px}
+.main::-webkit-scrollbar-thumb{background:#222;border-radius:99px}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kcard{background:var(--card);border:1px solid var(--b1);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+.kcard::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kacc,#333)}
+.klbl{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.kval{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;line-height:1}
+.kval span{font-size:11px;color:var(--muted);font-weight:400;margin-left:2px}
+.ksub{font-size:10.5px;color:var(--muted);margin-top:4px}
+.kprog{height:2px;background:rgba(255,255,255,.05);border-radius:99px;margin-top:6px;overflow:hidden}
+.kprog-bar{height:100%;border-radius:99px}
+
+/* CHART CARD */
+.ccrd{background:var(--card);border:1px solid var(--b1);border-radius:10px;padding:16px 18px}
+.ccrd-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px}
+.ctitle{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:var(--txt)}
+.csub{font-size:10.5px;color:var(--muted);margin-top:3px}
+.toggle-row{display:flex;background:var(--bg3);border:1px solid var(--b1);border-radius:7px;overflow:hidden;flex-shrink:0}
+.toggle-row button{background:none;border:none;color:var(--muted2);padding:6px 13px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.toggle-row button.active{background:rgba(132,225,21,.15);color:var(--vl)}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--b2)}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted2)}
+.leg-line{width:18px;height:2px;border-radius:2px;flex-shrink:0}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--bg3);padding:8px 12px;text-align:left;font-size:9.5px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;white-space:nowrap;border-bottom:1px solid var(--b1)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.025);transition:background .1s}
+tbody tr:hover{background:rgba(132,225,21,.03)}
+tbody td{padding:7px 12px;white-space:nowrap}
+.pill{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600}
+.pg{background:rgba(132,225,21,.12);color:var(--vl)}
+.pb{background:rgba(42,132,212,.15);color:#6ab3f5}
+.pa{background:rgba(245,166,35,.13);color:#f5a623}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state svg{opacity:.2;margin-bottom:12px}
+.empty-state p{font-size:13px;line-height:1.6}
+
+/* SELECTED COUNT BADGE */
+.sel-count{background:var(--vl);color:#044D41;border-radius:99px;font-size:10px;font-weight:700;padding:1px 6px;min-width:18px;text-align:center}
+
+/* CÉLULAS SELECIONÁVEIS NA TABELA MENSAL */
+.sel-cell{cursor:cell;transition:outline .08s}
+.sel-cell:hover{outline:1px solid rgba(132,225,21,.4)}
+.sel-cell.selected{outline:2px solid var(--vl) !important;background:rgba(132,225,21,.22) !important;color:#fff !important;position:relative;z-index:1}
+
+/* PAINEL FLUTUANTE DE SELEÇÃO */
+#selPanel{
+  position:fixed;
+  bottom:24px;
+  right:28px;
+  background:#1e1e1e;
+  border:1px solid rgba(132,225,21,.35);
+  border-radius:12px;
+  padding:14px 18px;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);
+  display:none;
+  z-index:9999;
+  min-width:260px;
+  animation:slideUp .18s ease;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+#selPanel .sp-title{font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+#selPanel .sp-title button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:0 2px}
+#selPanel .sp-title button:hover{color:var(--txt)}
+#selPanel .sp-row{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin-bottom:6px}
+#selPanel .sp-lbl{font-size:10.5px;color:var(--muted2)}
+#selPanel .sp-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:var(--vl)}
+#selPanel .sp-unit{font-size:10px;color:var(--muted);margin-left:3px;font-weight:400}
+#selPanel .sp-div{height:1px;background:rgba(255,255,255,.06);margin:8px 0}
+#selPanel .sp-count{font-size:10.5px;color:var(--muted);text-align:center;margin-top:4px}
+
+.pill.pr{background:rgba(248,113,113,.12);color:#f87171}
+#bp-main{overflow-y:auto;flex:1}
+</style>
+</head>
+<body>
+<div id="loadingOverlay" style="position:fixed;inset:0;background:rgba(10,10,10,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:'Plus Jakarta Sans',sans-serif;">
+  <div style="width:56px;height:56px;border:4px solid #1a2a1a;border-top-color:#84E115;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:20px;"></div>
+  <div id="loadingMsg" style="color:#c8f090;font-size:15px;letter-spacing:0.3px;">Carregando dados do portfólio…</div>
+  <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+</div>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('port')" id="btn-port">📊 Portfólio</button>
+  <button class="tab-btn" onclick="switchTab('bp')" id="btn-bp">🎯 BP vs Tendência</button>
+  <button class="tab-btn" onclick="switchTab('dash')" id="btn-dash">📈 Dashboard PLS</button>
+</nav>
+<div class="tab-pane active" id="pane-port"><!-- HEADER -->
+<div class="hdr">
+  <div class="logo">P</div>
+  <div>
+    <div class="htitle">Portfólio de Receita PLS</div>
+    <div class="hsub">Prestes Construtora · PCO · Visão Consolidada</div>
+  </div>
+  <div class="hspace"></div>
+  <div class="snap-info">
+    Referência: <select id="selSnap" onchange="PF.render()" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#fff;padding:4px 8px;font-size:11px"></select>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="ctrl">
+  <div class="lbl">Fluxo de Caixa</div>
+  <div class="tgl">
+    <button id="btnMensal" class="on" onclick="PF.setFluxo('mensal')">Mensal</button>
+    <button id="btnAnual" onclick="PF.setFluxo('anual')">Anual</button>
+  </div>
+  <div class="sep"></div>
+  <div class="lbl">Ranking por</div>
+  <div class="tgl">
+    <button id="rTend" class="on" onclick="PF.setRank('t')">Tendência</button>
+    <button id="rAreal" onclick="PF.setRank('a')">A Realizar</button>
+    <button id="rReal" onclick="PF.setRank('r')">Realizado</button>
+  </div>
+  <div class="hspace"></div>
+  <div style="font-size:11px;color:var(--muted)">33 empreendimentos · snapshot: <span id="snapRef" style="color:var(--txt);font-weight:600">—</span></div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- HERO KPIs -->
+  <div class="hero" id="heroRow"></div>
+
+  <!-- MID: fluxo + ranking rápido -->
+  <div class="mid">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title" id="fluxoTitle">Fluxo de Caixa Mensal — Portfólio Total</div>
+          <div class="card-sub" id="fluxoSub">Soma de todas as obras · 2023–2028</div>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartFluxo"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Top Obras por Receita</div>
+          <div class="card-sub" id="rankSub">Ordenado por tendência total</div>
+        </div>
+      </div>
+      <div class="obras-grid" id="obrasGrid"></div>
+    </div>
+  </div>
+
+  <!-- TABELA PIPELINE -->
+  <div class="card pipe-table">
+    <div class="card-hdr">
+      <div>
+        <div class="card-title">Pipeline Detalhado</div>
+        <div class="card-sub">Todas as obras · receita anual em R$ milhões</div>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:170px">Empreendimento</th>
+            <th>Snap.</th>
+            <th>Tendência</th>
+            <th>Realizado</th>
+            <th>%</th>
+            <th>A Realizar</th>
+            <th style="color:#3b82f6">2024</th>
+            <th style="color:#14b8a6">2025</th>
+            <th style="color:#84E115">2026</th>
+            <th style="color:#a855f7">2027</th>
+            <th style="color:#f87171">2028</th>
+            <th>Part.</th>
+          </tr>
+        </thead>
+        <tbody id="pipeBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+
+
+<!-- DADOS --></div>
+<div class="tab-pane" id="pane-bp" style="overflow:hidden"><!-- ABA BP vs TENDÊNCIA -->
+<!-- Este bloco é injetado dentro do pane-bp do arquivo combinado -->
+
+<!-- HEADER DA ABA -->
+<div class="hdr" style="background:linear-gradient(90deg,#044D41,#032f29)">
+  <div class="logo">P</div>
+  <div>
+    <div class="htitle">BP vs Tendência</div>
+    <div class="hsub">PRESTES CONSTRUTORA · PCO · Controle de Meta Anual</div>
+  </div>
+  <div class="hspace"></div>
+  <div style="font-size:11px;color:rgba(255,255,255,.35)" id="bp-hdInfo">—</div>
+</div>
+
+<!-- CONTROLES BP -->
+<div class="topbar" style="gap:16px;flex-wrap:wrap">
+
+  <!-- Ano do ciclo -->
+  <div class="lbl">Ano BP</div>
+  <select id="bp-selAno" onchange="BP.onAnoChange()" style="min-width:90px"></select>
+
+  <div class="sep"></div>
+
+  <!-- Snapshot BP (curva-base) -->
+  <div class="lbl">Curva Base (BP)</div>
+  <select id="bp-selBase" onchange="BP.onBaseChange()" style="min-width:110px"></select>
+
+  <div class="sep"></div>
+
+  <!-- Snapshot Tendência -->
+  <div class="lbl">Tendência</div>
+  <select id="bp-selTend" onchange="BP.onTendChange()" style="min-width:110px"></select>
+
+  <div class="hspace"></div>
+  <div style="font-size:11px;color:var(--muted)" id="bp-obrasInfo">—</div>
+</div>
+
+<!-- SELETOR DE OBRAS DO BP -->
+<div style="background:var(--bg2);border-bottom:1px solid var(--b1);padding:8px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0">
+  <div class="lbl" style="white-space:nowrap">Obras do BP</div>
+
+  <!-- Dropdown multiselect -->
+  <div style="position:relative" id="bp-wrapObras">
+    <div id="bp-triggerObras" onclick="BP.toggleObrasMenu()"
+      style="background:var(--bg3);border:1px solid var(--b1);color:var(--txt);padding:6px 12px;border-radius:7px;font-size:12.5px;cursor:pointer;display:flex;align-items:center;gap:8px;min-width:200px;user-select:none">
+      <span id="bp-labelObras" style="flex:1">Selecionar obras...</span>
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 3l4 4 4-4" stroke="#666" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div id="bp-menuObras" style="display:none;position:absolute;top:calc(100% + 4px);left:0;z-index:400;background:#1e1e1e;border:1px solid rgba(255,255,255,.08);border-radius:10px;width:280px;max-height:340px;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.7);padding:8px">
+      <input id="bp-filtroObras" type="text" placeholder="Buscar obra..." oninput="BP.filtrarObrasMenu(this.value)"
+        style="width:100%;background:var(--bg3);border:1px solid var(--b1);color:var(--txt);padding:6px 10px;border-radius:6px;font-size:12px;margin-bottom:6px;font-family:'DM Sans',sans-serif">
+      <div id="bp-listaObras"></div>
+      <div style="display:flex;gap:6px;border-top:1px solid rgba(255,255,255,.06);margin-top:6px;padding-top:6px">
+        <button onclick="BP.selectTodasObras()" style="flex:1;background:rgba(132,225,21,.08);border:1px solid rgba(132,225,21,.2);color:var(--vl);padding:5px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer">Todas</button>
+        <button onclick="BP.clearObras()" style="flex:1;background:rgba(255,255,255,.04);border:1px solid var(--b1);color:var(--muted2);padding:5px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer">Limpar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chips das obras selecionadas -->
+  <div id="bp-obrasChips" style="display:flex;flex-wrap:wrap;gap:4px;flex:1"></div>
+
+  <!-- Status salvo -->
+  <div id="bp-saveStatus" style="font-size:10px;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:5px;flex-shrink:0">
+    <span id="bp-saveIcon">💾</span>
+    <span id="bp-saveLabel">—</span>
+  </div>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-row" id="bp-kpiRow" style="padding:14px 20px;gap:12px;display:grid;grid-template-columns:repeat(5,1fr);flex-shrink:0"></div>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<div style="flex:1;overflow-y:auto;padding:0 20px 20px" id="bp-main">
+
+  <!-- TABELA DE VARIAÇÃO -->
+  <div class="ccrd" style="margin-top:16px">
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;font-weight:700;margin-bottom:4px;color:var(--txt)">Variação BP vs Tendência</div>
+    <div style="font-size:10.5px;color:var(--muted);margin-bottom:14px" id="bp-varSub">—</div>
+    <div id="bp-varWrap" class="tbl-wrap"></div>
+  </div>
+
+  <!-- CURVA BP -->
+  <div class="ccrd" style="margin-top:16px">
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;font-weight:700;margin-bottom:4px;color:#f5a623">Curva BP — Mês a Mês</div>
+    <div style="font-size:10.5px;color:var(--muted);margin-bottom:14px" id="bp-baseSub">—</div>
+    <div id="bp-baseWrap"></div>
+  </div>
+
+  <!-- CURVA TENDÊNCIA -->
+  <div class="ccrd" style="margin-top:16px">
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;font-weight:700;margin-bottom:4px;color:var(--vl)">Curva Tendência — Mês a Mês</div>
+    <div style="font-size:10.5px;color:var(--muted);margin-bottom:14px" id="bp-tendSub">—</div>
+    <div id="bp-tendWrap"></div>
+  </div>
+
+</div>
+</div>
+<div class="tab-pane" id="pane-dash"><!-- HEADER -->
+<div class="hdr">
+  <div class="logo">P</div>
+  <div>
+    <div class="htitle">Curvas de Receita PLS</div>
+    <div class="hsub">PRESTES CONSTRUTORA · PCO</div>
+  </div>
+  <div class="hspace"></div>
+  <div style="font-size:11px;color:rgba(255,255,255,.35)" id="hdInfo">—</div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="lbl">Empreendimento</div>
+  <div style="position:relative" id="wrapObras">
+    <div id="triggerObras" onclick="DB.toggleObrasMenu()"
+      style="background:var(--bg3);border:1px solid var(--b1);color:var(--txt);padding:7px 10px 7px 12px;border-radius:7px;font-size:12.5px;cursor:pointer;display:flex;align-items:center;gap:8px;min-width:220px;user-select:none">
+      <span id="labelObras" style="flex:1">Selecionar...</span>
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 3l4 4 4-4" stroke="#666" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div id="menuObras" style="display:none;position:absolute;top:calc(100% + 4px);left:0;z-index:300;background:#1e1e1e;border:1px solid rgba(255,255,255,.08);border-radius:10px;width:260px;max-height:320px;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.7);padding:8px">
+      <input id="filtroObras" type="text" placeholder="Buscar..." oninput="DB.filtrarObras(this.value)"
+        style="width:100%;background:var(--bg3);border:1px solid var(--b1);color:var(--txt);padding:6px 10px;border-radius:6px;font-size:12px;margin-bottom:6px">
+      <div id="listaObras"></div>
+      <div style="display:flex;gap:6px;border-top:1px solid rgba(255,255,255,.06);margin-top:6px;padding-top:6px">
+        <button onclick="DB.todasObras()" style="flex:1;background:rgba(132,225,21,.08);border:1px solid rgba(132,225,21,.2);color:var(--vl);padding:5px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer">Todas</button>
+        <button onclick="DB.limparObras()" style="flex:1;background:rgba(255,255,255,.04);border:1px solid var(--b1);color:var(--muted2);padding:5px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer">Limpar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <div class="lbl">Período do gráfico</div>
+  <div class="periodo-wrap">
+    <select id="periodoIni" onchange="renderChart()"></select>
+    <span>→</span>
+    <select id="periodoFim" onchange="renderChart()"></select>
+  </div>
+
+  <div class="sep"></div>
+
+  <div class="lbl">Exibição</div>
+  <div class="toggle-row">
+    <button id="btnMensal" class="active" onclick="DB.setView('mensal')">Mensal</button>
+    <button id="btnAcum" onclick="DB.setView('acumulado')">Acumulado</button>
+  </div>
+
+  <div class="hspace"></div>
+  <div style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px">
+    <span id="countLabel">0 snapshots selecionados</span>
+    <span class="sel-count" id="selCount">0</span>
+  </div>
+  <button onclick="DB.clearAll()"
+    style="background:none;border:1px solid var(--b1);color:var(--muted2);padding:5px 12px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer">
+    Limpar
+  </button>
+</div>
+
+<!-- SELETOR DE SNAPSHOTS -->
+<div style="background:var(--bg2);border-bottom:1px solid var(--b1);padding:10px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;flex-shrink:0">
+  <div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;white-space:nowrap">Snapshots</div>
+
+  <!-- Select de ano -->
+  <select id="selAnoSnap" onchange="DB.onAnoSnapChange()" style="min-width:90px"></select>
+
+  <!-- Modo 1 obra: chips de meses -->
+  <div id="sbList" style="display:flex;flex-wrap:wrap;gap:5px"></div>
+
+  <!-- Modo multi-obra: select de mês único -->
+  <div id="sbMulti" style="display:none;align-items:center;gap:10px">
+    <select id="selMesSnap" onchange="DB.onMesSnapChange()" style="min-width:110px"></select>
+    <div id="sbMultiStatus" style="font-size:11px;color:var(--muted2)"></div>
+  </div>
+
+  <div style="margin-left:auto;display:flex;gap:6px">
+    <button onclick="DB.selectAllYear()" class="sb-btn">Ano todo</button>
+    <button onclick="DB.clearAll()" class="sb-btn">Limpar</button>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="body" style="flex-direction:column;overflow:hidden">
+  <div style="display:flex;flex:1;overflow:hidden">
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- KPIs -->
+    <div class="kpi-row" id="kpiRow">
+      <div class="kcard" style="grid-column:1/-1">
+        <div class="klbl">Selecione snapshots na barra lateral</div>
+        <div class="kval" style="font-size:14px;color:var(--muted)">▲ Clique em "Snapshots" acima para selecionar as curvas</div>
+      </div>
+    </div>
+
+    <!-- GRÁFICO -->
+    <div class="ccrd">
+      <div class="ccrd-hdr">
+        <div>
+          <div class="ctitle" id="chartTitle">Curva de Receita — Competência Mensal</div>
+          <div class="csub" id="chartSub">Selecione snapshots para comparar</div>
+        </div>
+      </div>
+      <div style="position:relative;width:100%;height:300px">
+        <canvas id="chartMain"></canvas>
+      </div>
+      <div class="legend" id="legendArea"></div>
+    </div>
+
+    <!-- TABELA RESUMO -->
+    <div class="ccrd">
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;margin-bottom:12px;color:var(--txt)">Resumo dos Snapshots Selecionados</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Snapshot</th>
+              <th>Total Tendência (R$)</th>
+              <th>Realizado (R$)</th>
+              <th>% Realizado</th>
+              <th>A Realizar (R$)</th>
+              <th>% A Realizar</th>
+            </tr>
+          </thead>
+          <tbody id="tblBody">
+            <tr><td colspan="6" style="text-align:center;padding:28px;color:var(--muted)">Nenhum snapshot selecionado</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TABELA MÊS A MÊS -->
+    <div class="ccrd" id="cardMensal" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:var(--txt)">Valores Mês a Mês — por Snapshot</div>
+          <div style="font-size:10.5px;color:var(--muted);margin-top:2px" id="tblMensalSub">Competência mensal em R$ · período filtrado</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase">Unidade:</span>
+          <button id="btnUnidK" onclick="DB.setUnidMensal('k')" style="background:rgba(132,225,21,.12);border:1px solid rgba(132,225,21,.3);color:var(--vl);padding:4px 10px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer">R$ mil</button>
+          <button id="btnUnidM" onclick="DB.setUnidMensal('m')" style="background:rgba(255,255,255,.04);border:1px solid var(--b1);color:var(--muted);padding:4px 10px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer">R$ M</button>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table id="tblMensal">
+          <thead id="tblMensalHead"></thead>
+          <tbody id="tblMensalBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+  </div><!-- /flex row -->
+</div><!-- /body -->
+
+
+
+<!-- DADOS INJETADOS -->
+
+
+<!-- PAINEL FLUTUANTE DE SELEÇÃO DE CÉLULAS -->
+<div id="selPanel">
+  <div class="sp-title">
+    <span>📊 Células selecionadas</span>
+    <button onclick="DB.clearCellSel()" title="Limpar seleção">×</button>
+  </div>
+  <div class="sp-row">
+    <span class="sp-lbl">Soma</span>
+    <span><span class="sp-val" id="spSoma">—</span><span class="sp-unit" id="spUnit">R$ mil</span></span>
+  </div>
+  <div class="sp-div"></div>
+  <div class="sp-row">
+    <span class="sp-lbl">Média</span>
+    <span><span class="sp-val" id="spMedia" style="font-size:15px;color:#f5a623">—</span><span class="sp-unit" id="spUnit2">R$ mil</span></span>
+  </div>
+  <div class="sp-div"></div>
+  <div class="sp-row" id="spMaxRow">
+    <span class="sp-lbl">Maior valor</span>
+    <span><span class="sp-val" id="spMax" style="font-size:13px;color:#6ab3f5">—</span><span class="sp-unit" id="spUnit3">R$ mil</span></span>
+  </div>
+  <div class="sp-count" id="spCount">0 células · clique para selecionar</div>
+</div></div>
+<script>
+let DATA = []; // carregado via fetch do GitHub
+let _dataLoaded = false;
+let _dataCallbacks = [];
+function _onDataReady(cb) {
+  if (_dataLoaded) { cb(); } else { _dataCallbacks.push(cb); }
+}
+function _resolveData(arr) {
+  DATA = arr;
+  _dataLoaded = true;
+  _dataCallbacks.forEach(cb => cb());
+  _dataCallbacks = [];
+  // Ocultar overlay de loading
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) overlay.style.display = 'none';
+}
+function switchTab(id){
+  document.querySelectorAll('.tab-pane').forEach(p=>{p.classList.remove('active');p.style.display='none';});
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pane-'+id).classList.add('active');
+  document.getElementById('pane-'+id).style.display='flex';
+  document.getElementById('btn-'+id).classList.add('active');
+  setTimeout(()=>window.dispatchEvent(new Event('resize')),60);
+}
+</script>
+<script>
+const PORT={"obras":[{"e":"Ideal.e Copel 1","t":81576744,"r":0,"a":81576744,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":0,"2026":0,"2027":31090779,"2028":46407127}},{"e":"Ideal.e Santa Maria","t":77052009,"r":0,"a":77052009,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":0,"2026":0,"2027":41407182,"2028":31792226}},{"e":"Vittace Bosque dos Pinheiros","t":76449829,"r":62888995,"a":13560834,"s":"2026-03","anos":{"2023":0,"2024":11042525,"2025":46991945,"2026":18415359,"2027":0,"2028":0}},{"e":"Harmos","t":73069929,"r":0,"a":73069929,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":0,"2026":12684939,"2027":44075782,"2028":16309208}},{"e":"Eleva São Camilo","t":72762075,"r":0,"a":72762075,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":0,"2026":0,"2027":13318059,"2028":41915928}},{"e":"Ideal.e Vicentino","t":71888324,"r":46081903,"a":25806421,"s":"2026-03","anos":{"2023":0,"2024":1302058,"2025":35471366,"2026":31520485,"2027":3594416,"2028":0}},{"e":"Eleva You","t":71050132,"r":4637021,"a":66413111,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":2151393,"2026":34575395,"2027":30412437,"2028":3910905}},{"e":"Ideal.e Guarapuava","t":68828567,"r":11023059,"a":57805508,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":8034239,"2026":46328269,"2027":14466060,"2028":0}},{"e":"Vittace Serena","t":61779904,"r":61779904,"a":0,"s":"2026-01","anos":{"2023":12699819,"2024":41945812,"2025":7134271,"2026":0,"2027":0,"2028":0}},{"e":"Viverti Apucarana III e IV","t":61339162,"r":727357,"a":60611805,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":422201,"2026":29322104,"2027":28944911,"2028":2649946}},{"e":"Eleva Soul","t":60999957,"r":0,"a":60999957,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":0,"2026":5180627,"2027":28441752,"2028":24194710}},{"e":"Ideal.e Vila Estrela","t":60180000,"r":0,"a":60180000,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":0,"2026":20571105,"2027":36215650,"2028":3393245}},{"e":"Vista Batel","t":59471433,"r":59471433,"a":0,"s":"2026-01","anos":{"2023":30578078,"2024":22064255,"2025":3167505,"2026":0,"2027":0,"2028":0}},{"e":"Vittace Flora","t":58009522,"r":21262761,"a":36746762,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":16592904,"2026":35908924,"2027":5507696,"2028":0}},{"e":"Vista Santa Paula","t":54313464,"r":54313464,"a":0,"s":"2024-01","anos":{"2023":3047183,"2024":0,"2025":0,"2026":0,"2027":0,"2028":0}},{"e":"Vittace Nature","t":47418635,"r":47418635,"a":0,"s":"2026-03","anos":{"2023":0,"2024":24323263,"2025":22685383,"2026":409988,"2027":0,"2028":0}},{"e":"Liv.In","t":43058078,"r":6695531,"a":36362547,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":5128217,"2026":16917520,"2027":20276049,"2028":736294}},{"e":"Vista Uvaranas","t":42480664,"r":42480664,"a":0,"s":"2024-01","anos":{"2023":0,"2024":0,"2025":0,"2026":0,"2027":0,"2028":0}},{"e":"Home 433","t":41454788,"r":34614748,"a":6840040,"s":"2026-03","anos":{"2023":1475790,"2024":11089156,"2025":20312845,"2026":8576997,"2027":0,"2028":0}},{"e":"Visi.on","t":41400000,"r":19818180,"a":21581820,"s":"2026-03","anos":{"2023":0,"2024":4831380,"2025":13177620,"2026":18624866,"2027":4766134,"2028":0}},{"e":"Vittace Sabará","t":39987624,"r":39987624,"a":0,"s":"2025-01","anos":{"2023":18678596,"2024":1999381,"2025":0,"2026":0,"2027":0,"2028":0}},{"e":"Vittace Terra Nova","t":38825275,"r":0,"a":38825275,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":0,"2026":0,"2027":18041482,"2028":20783795}},{"e":"Vittace Parque do Lago","t":37979027,"r":37979027,"a":0,"s":"2023-06","anos":{"2023":0,"2024":0,"2025":0,"2026":0,"2027":0,"2028":0}},{"e":"Ideal.e Top Sports","t":37592941,"r":0,"a":37592941,"s":"2026-03","anos":{"2023":0,"2024":0,"2025":0,"2026":1676645,"2027":27886442,"2028":8029852}},{"e":"Eleva Hauer","t":37210316,"r":37210316,"a":0,"s":"2026-01","anos":{"2023":3060105,"2024":21044916,"2025":13105294,"2026":0,"2027":0,"2028":0}},{"e":"Viverti Apucarana I e II","t":35151427,"r":35151427,"a":0,"s":"2024-01","anos":{"2023":0,"2024":0,"2025":0,"2026":0,"2027":0,"2028":0}},{"e":"Eleva Arvoredo","t":30600327,"r":30600327,"a":0,"s":"2025-01","anos":{"2023":6384151,"2024":1530016,"2025":0,"2026":0,"2027":0,"2028":0}},{"e":"Vittace Reserva","t":30087891,"r":30087891,"a":0,"s":"2024-01","anos":{"2023":2999947,"2024":0,"2025":0,"2026":0,"2027":0,"2028":0}},{"e":"Viva Princesa","t":27212497,"r":27212497,"a":0,"s":"2024-01","anos":{"2023":2568859,"2024":0,"2025":0,"2026":0,"2027":0,"2028":0}},{"e":"Manacá","t":22278875,"r":22278875,"a":0,"s":"2024-01","anos":{"2023":2184450,"2024":0,"2025":0,"2026":0,"2027":0,"2028":0}},{"e":"Trancoso","t":19184365,"r":19184365,"a":0,"s":"2024-01","anos":{"2023":959218,"2024":0,"2025":0,"2026":0,"2027":0,"2028":0}},{"e":"Vittace Alameda","t":17882078,"r":17882078,"a":0,"s":"2025-01","anos":{"2023":13826421,"2024":1738139,"2025":0,"2026":0,"2027":0,"2028":0}},{"e":"Vittace Boulevard","t":17420126,"r":17420126,"a":0,"s":"2025-01","anos":{"2023":12213250,"2024":871006,"2025":0,"2026":0,"2027":0,"2028":0}}],"mensal":{"2023-01":8585391,"2023-02":10086321,"2023-03":11156243,"2023-04":9654589,"2023-05":10031428,"2023-06":11209549,"2023-07":8029503,"2023-08":9939839,"2023-09":7794441,"2023-10":7291030,"2023-11":7191387,"2023-12":9706146,"2024-01":9796728,"2024-02":8591463,"2024-03":10931633,"2024-04":10555921,"2024-05":13193114,"2024-06":12728782,"2024-07":10714180,"2024-08":13053038,"2024-09":11971240,"2024-10":13876798,"2024-11":14309883,"2024-12":14059127,"2025-01":6637735,"2025-02":15421575,"2025-03":17169455,"2025-04":18152094,"2025-05":18900848,"2025-06":18454600,"2025-07":7648376,"2025-08":16912866,"2025-09":16837668,"2025-10":18584019,"2025-11":11051960,"2025-12":28603987,"2026-01":11569913,"2026-02":18565989,"2026-03":19511800,"2026-04":21656764,"2026-05":24334164,"2026-06":24824524,"2026-07":24540170,"2026-08":27570299,"2026-09":28362893,"2026-10":27521012,"2026-11":27360150,"2026-12":24895545,"2027-01":19156492,"2027-02":30805741,"2027-03":25052418,"2027-04":25090339,"2027-05":36947591,"2027-06":30234307,"2027-07":26344515,"2027-08":28031872,"2027-09":33154526,"2027-10":31963307,"2027-11":34813638,"2027-12":26850085,"2028-01":23967978,"2028-02":26053362,"2028-03":31661525,"2028-04":25592464,"2028-05":22598958,"2028-06":20326844,"2028-07":10327658,"2028-08":12964470,"2028-09":10419425,"2028-10":5582299,"2028-11":5211172,"2028-12":5417081},"todos_snaps":["2023-01","2023-02","2023-03","2023-04","2023-05","2023-06","2023-07","2023-08","2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03"]};
+
+// ── FETCH DOS DADOS HISTÓRICOS DO GITHUB ────────────────────────────────────
+(function() {
+  const DATA_URL = 'https://raw.githubusercontent.com/enggiovanecastro-ctrl/prestes-pls/main/data/pls_data.json';
+
+  // Detectar ambiente file:// onde fetch cross-origin é bloqueado
+  if (location.protocol === 'file:') {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+      overlay.innerHTML = `
+        <div style="max-width:480px;text-align:center;padding:32px;font-family:'Plus Jakarta Sans',sans-serif;">
+          <div style="font-size:40px;margin-bottom:16px;">⚠️</div>
+          <div style="color:#84E115;font-size:17px;font-weight:700;margin-bottom:12px;">Aberto via arquivo local</div>
+          <div style="color:#c8d8c0;font-size:13px;line-height:1.7;margin-bottom:24px;">
+            Browsers bloqueiam requisições de rede a partir de <code style="color:#84E115">file://</code>.<br>
+            Para usar o dashboard, escolha uma das opções:
+          </div>
+          <div style="background:#0d1f0d;border:1px solid #2a4a2a;border-radius:8px;padding:16px;text-align:left;margin-bottom:12px;">
+            <div style="color:#84E115;font-size:12px;font-weight:700;margin-bottom:6px;">OPÇÃO 1 — VS Code Live Server</div>
+            <div style="color:#a0c090;font-size:12px;">Clique com botão direito no arquivo → <em>Open with Live Server</em></div>
+          </div>
+          <div style="background:#0d1f0d;border:1px solid #2a4a2a;border-radius:8px;padding:16px;text-align:left;margin-bottom:12px;">
+            <div style="color:#84E115;font-size:12px;font-weight:700;margin-bottom:6px;">OPÇÃO 2 — Python (no terminal)</div>
+            <code style="color:#c8f090;font-size:12px;display:block;margin-top:4px;">python -m http.server 8080</code>
+            <div style="color:#a0c090;font-size:11px;margin-top:4px;">Depois abra: <em>http://localhost:8080</em></div>
+          </div>
+          <div style="background:#0d1f0d;border:1px solid #2a4a2a;border-radius:8px;padding:16px;text-align:left;">
+            <div style="color:#84E115;font-size:12px;font-weight:700;margin-bottom:6px;">OPÇÃO 3 — Chrome com flag</div>
+            <code style="color:#c8f090;font-size:12px;display:block;margin-top:4px;">--allow-file-access-from-files</code>
+            <div style="color:#a0c090;font-size:11px;margin-top:4px;">Inicie o Chrome com este parâmetro</div>
+          </div>
+        </div>`;
+    }
+    return; // Não tenta fazer fetch
+  }
+
+  fetch(DATA_URL)
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(payload => {
+      // O JSON tem estrutura: { meta, PORT, SNAP_DATA, BP_DATA, DATA }
+      let arr;
+      if (Array.isArray(payload)) {
+        // Formato legado: array direto
+        arr = payload;
+      } else if (payload.DATA && Array.isArray(payload.DATA)) {
+        arr = payload.DATA;
+        // Sobrescrever PORT com dados frescos do GitHub se disponível
+        if (payload.PORT) {
+          Object.assign(PORT, payload.PORT);
+        }
+      } else {
+        throw new Error('Chave DATA não encontrada. Chaves disponíveis: ' + Object.keys(payload).join(', '));
+      }
+      if (arr.length === 0) throw new Error('Array DATA está vazio');
+      _resolveData(arr);
+    })
+    .catch(err => {
+      console.error('Erro ao carregar dados:', err);
+      const overlay = document.getElementById('loadingOverlay');
+      if (overlay) {
+        overlay.innerHTML = `
+          <div style="max-width:400px;text-align:center;padding:32px;font-family:'Plus Jakarta Sans',sans-serif;">
+            <div style="font-size:40px;margin-bottom:16px;">❌</div>
+            <div style="color:#ff6b6b;font-size:16px;font-weight:700;margin-bottom:10px;">Erro ao carregar dados</div>
+            <div style="color:#c8d8c0;font-size:13px;line-height:1.6;margin-bottom:16px;">${err.message}</div>
+            <div style="color:#a0c090;font-size:12px;">Verifique se o repositório GitHub está público<br>e o arquivo <code style="color:#84E115">data/pls_data.json</code> existe.</div>
+            <button onclick="location.reload()" style="margin-top:20px;background:#84E115;color:#0a1a0a;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;">↺ Tentar novamente</button>
+          </div>`;
+      }
+    });
+})();
+
+
+let fluxoMode = 'mensal';
+let rankMode  = 't';
+let chartF    = null;
+const MES_PT  = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const ANOS    = ['2023','2024','2025','2026','2027','2028'];
+const COR_ANO = {'2023':'#2a84d4','2024':'#3b82f6','2025':'#14b8a6','2026':'#84E115','2027':'#a855f7','2028':'#f87171'};
+
+function fmt(v){ if(v>=1e6) return 'R$'+(v/1e6).toFixed(1)+'M'; if(v>=1e3) return 'R$'+(v/1e3).toFixed(0)+'K'; return 'R$'+Math.round(v); }
+function fmtM(v){ return (v/1e6).toFixed(1)+'M'; }
+function fmtFull(v){ return 'R$ '+Math.round(v).toLocaleString('pt-BR'); }
+function fmtMes(ym){ const [y,m]=ym.split('-'); return MES_PT[+m-1]+'/'+y.slice(2); }
+
+window.addEventListener('DOMContentLoaded', () => {
+  const data = PORT;
+  // Popular select de snaps
+  const sel = document.getElementById('selSnap');
+  data.todos_snaps.forEach(s => sel.add(new Option(fmtMes(s), s)));
+  sel.value = data.todos_snaps[data.todos_snaps.length - 1];
+  render();
+});
+
+function setFluxo(v) {
+  fluxoMode = v;
+  document.getElementById('btnMensal').classList.toggle('on', v==='mensal');
+  document.getElementById('btnAnual').classList.toggle('on', v==='anual');
+  renderFluxo();
+}
+
+function setRank(v) {
+  rankMode = v;
+  ['t','a','r'].forEach(k => document.getElementById('r'+{t:'Tend',a:'Areal',r:'Real'}[k]).classList.toggle('on', k===v));
+  const labels = {t:'tendência total', a:'a realizar', r:'realizado'};
+  document.getElementById('rankSub').textContent = `Ordenado por ${labels[v]}`;
+  renderObrasGrid();
+  renderPipe();
+}
+
+function getObras() {
+  const snap = document.getElementById('selSnap').value;
+  // Usar dados do PORT que já tem snapshot mais recente
+  // Para snap selecionado, filtrar obras que têm aquele snap ou anterior
+  return PORT.obras;
+}
+
+function render() {
+  const snap = document.getElementById('selSnap').value;
+  document.getElementById('snapRef').textContent = fmtMes(snap);
+  renderHero();
+  renderFluxo();
+  renderObrasGrid();
+  renderPipe();
+}
+
+function renderHero() {
+  const obras = PORT.obras;
+  const totT = obras.reduce((s,o)=>s+o.t,0);
+  const totR = obras.reduce((s,o)=>s+o.r,0);
+  const totA = obras.reduce((s,o)=>s+o.a,0);
+  const pctR = (totR/totT*100).toFixed(1);
+  const pctA = (totA/totT*100).toFixed(1);
+
+  const anoTots = ANOS.map(a => obras.reduce((s,o)=>s+(o.anos[a]||0),0));
+  const maxAno = Math.max(...anoTots);
+  const picoIdx = anoTots.indexOf(maxAno);
+
+  document.getElementById('heroRow').innerHTML = `
+    <div class="hcard">
+      <div class="hcard-accent" style="background:#f5a623"></div>
+      <div class="hcard-lbl">Total Tendência</div>
+      <div class="hcard-val" style="color:#f5a623">${fmt(totT)}</div>
+      <div class="hcard-sub">Portfólio de ${PORT.obras.length} obras</div>
+    </div>
+    <div class="hcard">
+      <div class="hcard-accent" style="background:var(--vl)"></div>
+      <div class="hcard-lbl">Realizado</div>
+      <div class="hcard-val" style="color:var(--vl)">${fmt(totR)}</div>
+      <div class="hcard-sub">${pctR}% do portfólio</div>
+      <div class="hcard-bar"><div class="hcard-bar-fill" style="width:${pctR}%;background:var(--vl)"></div></div>
+    </div>
+    <div class="hcard">
+      <div class="hcard-accent" style="background:#3b82f6"></div>
+      <div class="hcard-lbl">A Realizar</div>
+      <div class="hcard-val" style="color:#6ab3f5">${fmt(totA)}</div>
+      <div class="hcard-sub">${pctA}% do portfólio</div>
+      <div class="hcard-bar"><div class="hcard-bar-fill" style="width:${pctA}%;background:#3b82f6"></div></div>
+    </div>
+    <div class="hcard" style="grid-column:span 1">
+      <div class="hcard-accent" style="background:#a855f7"></div>
+      <div class="hcard-lbl">Receita por Ano — Pico em ${ANOS[picoIdx]}: ${fmt(maxAno)}</div>
+      <div class="hcard-anos">
+        ${ANOS.map((ano,i)=>{
+          const h = maxAno > 0 ? Math.round(anoTots[i]/maxAno*100) : 0;
+          const cor = COR_ANO[ano];
+          return `<div class="ano-mini">
+            <div class="ano-mini-bar">
+              <div class="ano-mini-fill" style="height:${h}%;background:${cor}${i===picoIdx?'':';opacity:.5'}"></div>
+            </div>
+            <div class="ano-mini-lbl">${ano.slice(2)}</div>
+            <div class="ano-mini-val">${fmtM(anoTots[i])}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderFluxo() {
+  if (chartF) { chartF.destroy(); chartF = null; }
+  const ctx = document.getElementById('chartFluxo').getContext('2d');
+
+  if (fluxoMode === 'mensal') {
+    const mensal = PORT.mensal;
+    const meses = Object.keys(mensal).sort().filter(m => m >= '2023-01' && m <= '2028-12');
+    const vals = meses.map(m => mensal[m]/1e6);
+
+    // Acumulado
+    let cum = 0;
+    const acum = vals.map(v => { cum += v; return +cum.toFixed(2); });
+
+    chartF = new Chart(ctx, {
+      data: {
+        labels: meses.map(fmtMes),
+        datasets: [
+          {
+            type: 'bar',
+            label: 'Mensal',
+            data: vals,
+            backgroundColor: meses.map(m => COR_ANO[m.slice(0,4)] + '99'),
+            borderColor: meses.map(m => COR_ANO[m.slice(0,4)]),
+            borderWidth: 0,
+            borderRadius: 2,
+            yAxisID: 'y',
+          },
+          {
+            type: 'line',
+            label: 'Acumulado',
+            data: acum,
+            borderColor: 'rgba(132,225,21,.7)',
+            backgroundColor: 'transparent',
+            borderWidth: 1.5,
+            pointRadius: 0,
+            tension: 0.4,
+            yAxisID: 'y2',
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        animation: { duration: 400 },
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1c1c1f', borderColor: 'rgba(255,255,255,.07)', borderWidth: 1,
+            titleColor: '#aaa', bodyColor: '#999', padding: 10,
+            callbacks: { label: c => ` ${c.dataset.label}: R$${c.raw.toFixed(1)}M` }
+          }
+        },
+        scales: {
+          x: { grid: { color: 'rgba(255,255,255,.025)' }, ticks: { color: '#444', font: { size: 9 }, maxTicksLimit: 20, maxRotation: 45 } },
+          y: { grid: { color: 'rgba(255,255,255,.03)' }, ticks: { color: '#444', font: { size: 9 }, callback: v => 'R$'+v.toFixed(0)+'M' }, position: 'left' },
+          y2: { grid: { display: false }, ticks: { color: 'rgba(132,225,21,.4)', font: { size: 9 }, callback: v => 'R$'+v.toFixed(0)+'M' }, position: 'right' }
+        }
+      }
+    });
+    document.getElementById('fluxoTitle').textContent = 'Fluxo de Caixa Mensal — Portfólio Total';
+    document.getElementById('fluxoSub').textContent = 'Barras por mês · linha = acumulado · 2023–2028';
+
+  } else {
+    const obras = PORT.obras;
+    // Barras empilhadas por ano, top 8 obras + demais
+    const sorted = [...obras].sort((a,b)=>b.t-a.t);
+    const top = sorted.slice(0,8);
+    const rest = sorted.slice(8);
+
+    const datasets = top.map((o,i) => ({
+      label: o.e.split(' ').slice(0,3).join(' '),
+      data: ANOS.map(ano => (o.anos[ano]||0)/1e6),
+      backgroundColor: `hsl(${i*42+10},60%,52%)`,
+      borderRadius: 3, borderSkipped: false, stack: 'obras',
+    }));
+    if (rest.length) datasets.push({
+      label: `Outras ${rest.length} obras`,
+      data: ANOS.map(ano => rest.reduce((s,o)=>s+(o.anos[ano]||0),0)/1e6),
+      backgroundColor: '#2a2d32',
+      borderRadius: 3, borderSkipped: false, stack: 'obras',
+    });
+
+    chartF = new Chart(ctx, {
+      type: 'bar',
+      data: { labels: ANOS, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        animation: { duration: 400 },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1c1c1f', borderColor: 'rgba(255,255,255,.07)', borderWidth: 1,
+            titleColor: '#aaa', bodyColor: '#999', padding: 10,
+            callbacks: { label: c => ` ${c.dataset.label}: R$${c.raw.toFixed(1)}M` }
+          }
+        },
+        scales: {
+          x: { stacked: true, grid: { color: 'rgba(255,255,255,.025)' }, ticks: { color: '#555', font: { size: 11 } } },
+          y: { stacked: true, grid: { color: 'rgba(255,255,255,.03)' }, ticks: { color: '#444', font: { size: 9 }, callback: v => 'R$'+v+'M' } }
+        }
+      }
+    });
+    document.getElementById('fluxoTitle').textContent = 'Receita por Ano — Top 8 Obras Empilhadas';
+    document.getElementById('fluxoSub').textContent = 'R$ milhões · 2023–2028';
+  }
+}
+
+function renderObrasGrid() {
+  const obras = [...PORT.obras].sort((a,b) => b[rankMode]-a[rankMode]);
+  const maxVal = obras[0][rankMode];
+  const colors = {t:'#f5a623', r:'var(--vl)', a:'#6ab3f5'};
+
+  document.getElementById('obrasGrid').innerHTML = obras.map((o,i) => {
+    const pct = maxVal > 0 ? Math.round(o[rankMode]/maxVal*100) : 0;
+    const pctR = o.t > 0 ? Math.round(o.r/o.t*100) : 0;
+    const dot = pctR >= 80 ? '#84E115' : pctR >= 40 ? '#f5a623' : pctR > 0 ? '#6ab3f5' : '#444';
+    return `<div class="obra-row">
+      <div class="obra-rank">${i+1}</div>
+      <span class="dot" style="background:${dot}"></span>
+      <div class="obra-name" title="${o.e}">${o.e}</div>
+      <div class="obra-bar-wrap"><div class="obra-bar-r" style="width:${pct}%;background:${colors[rankMode]}"></div></div>
+      <div class="obra-val" style="color:${colors[rankMode]}">${fmt(o[rankMode])}</div>
+      <div class="obra-pct" style="color:${dot}">${pctR}%</div>
+    </div>`;
+  }).join('');
+}
+
+function renderPipe() {
+  const obras = [...PORT.obras].sort((a,b) => b[rankMode]-a[rankMode]);
+  const totT = obras.reduce((s,o)=>s+o.t,0);
+
+  let html = obras.map((o,i) => {
+    const pctR = o.t > 0 ? (o.r/o.t*100).toFixed(1) : '0.0';
+    const cls = +pctR>=80?'pg':+pctR>=50?'pa':+pctR>0?'pb':'pr';
+    const dot = +pctR>=80?'#84E115':+pctR>=50?'#f5a623':+pctR>0?'#6ab3f5':'#555';
+    const part = totT>0?(o.t/totT*100).toFixed(1):'0.0';
+    return `<tr>
+      <td><span class="dot" style="background:${dot}"></span><span style="color:var(--muted2);font-size:9px;margin-right:4px">${i+1}</span>${o.e}</td>
+      <td style="color:var(--muted);font-size:10px">${fmtMes(o.s)}</td>
+      <td style="color:#f5a623;font-weight:600">${fmtFull(o.t)}</td>
+      <td style="color:var(--vl)">${fmtFull(o.r)}</td>
+      <td><span class="pill ${cls}">${pctR}%</span></td>
+      <td style="color:#6ab3f5">${fmtFull(o.a)}</td>
+      <td style="color:${COR_ANO['2024']}">${o.anos['2024']>0?fmtM(o.anos['2024']):'—'}</td>
+      <td style="color:${COR_ANO['2025']}">${o.anos['2025']>0?fmtM(o.anos['2025']):'—'}</td>
+      <td style="color:${COR_ANO['2026']}">${o.anos['2026']>0?fmtM(o.anos['2026']):'—'}</td>
+      <td style="color:${COR_ANO['2027']}">${o.anos['2027']>0?fmtM(o.anos['2027']):'—'}</td>
+      <td style="color:${COR_ANO['2028']}">${o.anos['2028']>0?fmtM(o.anos['2028']):'—'}</td>
+      <td><div style="display:flex;align-items:center;gap:5px">
+        <div style="flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden;width:40px">
+          <div style="height:100%;width:${part}%;background:var(--vl);opacity:.5;max-width:100%;border-radius:99px"></div>
+        </div>
+        <span style="font-size:9.5px;color:var(--muted2)">${part}%</span>
+      </div></td>
+    </tr>`;
+  }).join('');
+
+  // Linha de total
+  const totR = obras.reduce((s,o)=>s+o.r,0);
+  const totA = obras.reduce((s,o)=>s+o.a,0);
+  const totPct = totT>0?(totR/totT*100).toFixed(1):'0';
+  html += `<tr class="tot">
+    <td style="color:var(--muted2);font-size:11px;font-weight:700">TOTAL PORTFÓLIO</td>
+    <td>—</td>
+    <td style="color:#f5a623">${fmtFull(totT)}</td>
+    <td style="color:var(--vl)">${fmtFull(totR)}</td>
+    <td><span class="pill pa">${totPct}%</span></td>
+    <td style="color:#6ab3f5">${fmtFull(totA)}</td>
+    ${ANOS.slice(1).map(ano=>`<td style="color:${COR_ANO[ano]};font-weight:600">${fmtM(obras.reduce((s,o)=>s+(o.anos[ano]||0),0))}</td>`).join('')}
+    <td style="color:var(--vl);font-weight:700">100%</td>
+  </tr>`;
+
+  document.getElementById('pipeBody').innerHTML = html;
+}
+
+window.PF={render,setFluxo,setRank};
+</script>
+<script>
+// ─── DADOS ───────────────────────────────────────────────────────────────────
+// DATA é global
+
+// ─── ESTADO ──────────────────────────────────────────────────────────────────
+let selectedObras = new Set(); // obras selecionadas (era selectedObra string)
+let snapsByObra  = {};
+let allEmps      = [];
+let selectedSnaps = new Set();
+let viewMode     = 'mensal';
+let chart        = null;
+let unidMensal   = 'k';
+let selectedCells = [];
+
+const _D4_PAL = ['#84E115','#2a84d4','#f5a623','#e15b97','#14b8a6','#a855f7','#fb923c','#34d399',
+                 '#60a5fa','#f87171','#34d399','#fbbf24','#a78bfa','#38bdf8'];
+const _D4_MES  = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+// Gera array com TODOS os meses YYYY-MM entre ini e fim (inclusive), sem pular zeros
+function gerarMeses(ini, fim) {
+  const meses = [];
+  let [y, m] = ini.split('-').map(Number);
+  const [yf, mf] = fim.split('-').map(Number);
+  while (y < yf || (y === yf && m <= mf)) {
+    meses.push(`${y}-${String(m).padStart(2,'0')}`);
+    m++;
+    if (m > 12) { m = 1; y++; }
+  }
+  return meses;
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  _onDataReady(() => {
+  // Indexar por obra
+  DATA.forEach(d => {
+    if (!snapsByObra[d.e]) snapsByObra[d.e] = [];
+    snapsByObra[d.e].push(d);
+  });
+  Object.values(snapsByObra).forEach(arr => arr.sort((a,b) => a.s.localeCompare(b.s)));
+  allEmps = Object.keys(snapsByObra).sort();
+
+  // Preencher selects de período com todos os meses das curvas
+  const mesesSet = new Set();
+  DATA.forEach(d => Object.keys(d.c).forEach(m => {
+    if (m >= '2022-01' && m <= '2030-12') mesesSet.add(m);
+  }));
+  const meses = [...mesesSet].sort();
+  const pi = document.getElementById('periodoIni');
+  const pf = document.getElementById('periodoFim');
+  meses.forEach(m => {
+    const lbl = fmtMes(m);
+    pi.add(new Option(lbl, m));
+    pf.add(new Option(lbl, m));
+  });
+  pi.value = meses.find(m => m >= '2023-01') || meses[0];
+  pf.value = meses.filter(m => m <= '2026-12').pop() || meses[meses.length-1];
+
+  // Iniciar com primeira obra
+  selectedObras.add(allEmps[0]);
+  buildObrasMenu();
+  updateObrasLabel();
+  buildAnoSelect();
+  }); // _onDataReady
+});
+
+// ─── MULTISELECT DE OBRAS ────────────────────────────────────────────────────
+function buildObrasMenu(filtro = '') {
+  const lower = filtro.toLowerCase();
+  const lista = document.getElementById('listaObras');
+  lista.innerHTML = '';
+  allEmps.filter(e => !filtro || e.toLowerCase().includes(lower)).forEach(e => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:12.5px;transition:background .1s';
+    div.onmouseenter = () => div.style.background = 'rgba(255,255,255,.04)';
+    div.onmouseleave = () => div.style.background = '';
+    const chk = document.createElement('input');
+    chk.type = 'checkbox'; chk.checked = selectedObras.has(e);
+    chk.style.cssText = 'accent-color:#84E115;width:13px;height:13px;cursor:pointer;flex-shrink:0';
+    chk.addEventListener('change', () => {
+      if (chk.checked) selectedObras.add(e); else selectedObras.delete(e);
+      updateObrasLabel();
+      onObraChange();
+    });
+    const lbl = document.createElement('label');
+    lbl.textContent = e; lbl.style.cssText = 'cursor:pointer;flex:1;color:var(--txt);font-size:12px';
+    lbl.onclick = () => { chk.checked = !chk.checked; chk.dispatchEvent(new Event('change')); };
+    div.appendChild(chk); div.appendChild(lbl);
+    lista.appendChild(div);
+  });
+}
+
+function filtrarObras(v) { buildObrasMenu(v); }
+
+function toggleObrasMenu() {
+  const m = document.getElementById('menuObras');
+  const open = m.style.display === 'block';
+  m.style.display = open ? 'none' : 'block';
+  if (!open) { document.getElementById('filtroObras').value = ''; buildObrasMenu(); document.getElementById('filtroObras').focus(); }
+}
+
+function todasObras()  { allEmps.forEach(e => selectedObras.add(e)); buildObrasMenu(); updateObrasLabel(); onObraChange(); }
+function limparObras() { selectedObras.clear(); buildObrasMenu(); updateObrasLabel(); onObraChange(); }
+
+function updateObrasLabel() {
+  const n = selectedObras.size;
+  document.getElementById('labelObras').textContent =
+    n === 0 ? 'Selecionar...' :
+    n === 1 ? [...selectedObras][0] :
+    n === allEmps.length ? `Todas (${n})` : `${n} empreendimentos`;
+}
+
+// Fechar menu ao clicar fora
+document.addEventListener('click', e => {
+  if (!e.target.closest('#wrapObras')) document.getElementById('menuObras').style.display = 'none';
+});
+
+// ─── SELETOR ANO + MESES ─────────────────────────────────────────────────────
+let anoAtual = '';
+
+function buildAnoSelect() {
+  const snapsAll = [...selectedObras].flatMap(o => snapsByObra[o] || []);
+  const anos = [...new Set(snapsAll.map(d => d.s.split('-')[0]))].sort();
+  const sel = document.getElementById('selAnoSnap');
+  const prev = sel.value;
+  sel.innerHTML = '';
+  anos.forEach(ano => sel.add(new Option(ano, ano)));
+  anoAtual = anos.includes(prev) ? prev : anos[anos.length - 1];
+  sel.value = anoAtual;
+  buildSidebar();
+}
+
+function onAnoSnapChange() {
+  anoAtual = document.getElementById('selAnoSnap').value;
+  buildSidebar();
+}
+
+// Chamado quando o select de mês muda (modo multi-obra)
+function onMesSnapChange() {
+  const mes = document.getElementById('selMesSnap').value;
+  if (!mes) return;
+  // Selecionar esse mês em todas as obras (limpa seleção anterior do ano)
+  selectedSnaps.forEach(k => {
+    const snapMes = k.split('|')[1];
+    if (snapMes && snapMes.startsWith(anoAtual)) selectedSnaps.delete(k);
+  });
+  [...selectedObras].forEach(o => {
+    const found = (snapsByObra[o] || []).find(d => d.s === mes);
+    if (found) selectedSnaps.add(o + '|' + mes);
+  });
+  updateCountBadge();
+  updateMultiStatus();
+  renderAll();
+}
+
+function selectAllYear() {
+  const multiObra = selectedObras.size > 1;
+  if (multiObra) {
+    // Em modo multi: selecionar mês mais recente do ano para todas as obras
+    const mes = document.getElementById('selMesSnap').value;
+    if (mes) onMesSnapChange();
+  } else {
+    [...selectedObras].forEach(o => {
+      (snapsByObra[o] || []).filter(d => d.s.startsWith(anoAtual)).forEach(d => selectedSnaps.add(o + '|' + d.s));
+    });
+    buildSidebar(); renderAll();
+  }
+}
+
+function updateMultiStatus() {
+  const mes = document.getElementById('selMesSnap').value;
+  const n = [...selectedSnaps].filter(k => k.split('|')[1] === mes).length;
+  const total = selectedObras.size;
+  document.getElementById('sbMultiStatus').textContent =
+    n === total ? `✓ ${n} obras selecionadas` : `${n} de ${total} obras têm esse snapshot`;
+}
+
+// ─── FUNÇÕES PRINCIPAIS ───────────────────────────────────────────────────────
+function onObraChange() {
+  selectedSnaps.clear();
+  buildAnoSelect();
+  renderAll();
+}
+
+function setView(v) {
+  viewMode = v;
+  document.getElementById('btnMensal').classList.toggle('active', v === 'mensal');
+  document.getElementById('btnAcum').classList.toggle('active', v === 'acumulado');
+  renderChart();
+}
+
+// ─── SIDEBAR ──────────────────────────────────────────────────────────────────
+function buildSidebar() {
+  const multiObra = selectedObras.size > 1;
+  const sbList  = document.getElementById('sbList');
+  const sbMulti = document.getElementById('sbMulti');
+
+  if (multiObra) {
+    // ── MODO MULTI: select de mês único
+    sbList.style.display  = 'none';
+    sbMulti.style.display = 'flex';
+
+    // Coletar meses do anoAtual disponíveis em pelo menos 1 obra
+    const mesSet = new Set();
+    [...selectedObras].forEach(o => {
+      (snapsByObra[o] || []).filter(d => d.s.startsWith(anoAtual)).forEach(d => mesSet.add(d.s));
+    });
+    const meses = [...mesSet].sort();
+    const sel = document.getElementById('selMesSnap');
+    const prevMes = sel.value;
+    sel.innerHTML = '';
+    meses.forEach(m => sel.add(new Option(fmtMes(m), m)));
+    // Default: manter seleção anterior ou mais recente
+    sel.value = meses.includes(prevMes) ? prevMes : meses[meses.length - 1];
+
+    // Se não tem nada selecionado ainda, auto-selecionar
+    const hasSelInYear = [...selectedSnaps].some(k => k.split('|')[1]?.startsWith(anoAtual));
+    if (!hasSelInYear && meses.length) {
+      [...selectedObras].forEach(o => {
+        const found = (snapsByObra[o] || []).find(d => d.s === sel.value);
+        if (found) selectedSnaps.add(o + '|' + sel.value);
+      });
+      updateCountBadge();
+      renderAll();
+    }
+    updateMultiStatus();
+
+  } else {
+    // ── MODO SINGLE: chips de meses
+    sbList.style.display  = 'flex';
+    sbMulti.style.display = 'none';
+    sbList.innerHTML = '';
+
+    const obra = [...selectedObras][0];
+    if (!obra) return;
+    const allSnaps = snapsByObra[obra] || [];
+    const snaps = allSnaps.filter(d => d.s.startsWith(anoAtual));
+
+    snaps.forEach(d => {
+      const key = obra + '|' + d.s;
+      const i = allSnaps.indexOf(d);
+      const color = _D4_PAL[i % _D4_PAL.length];
+      const active = selectedSnaps.has(key);
+      const pct = d.t > 0 ? Math.round(d.r / d.t * 100) : 0;
+
+      const el = document.createElement('div');
+      el.className = 'snap-item' + (active ? ' active' : '');
+      if (active) {
+        el.style.setProperty('--acc-bg',     color + '14');
+        el.style.setProperty('--acc-border', color + '44');
+        el.style.setProperty('--acc-color',  color);
+      }
+      el.innerHTML = `
+        <div class="snap-dot" style="${active ? 'background:'+color : ''}"></div>
+        <span class="snap-label">${d.l}</span>
+        <span class="snap-pct">${pct}%</span>
+      `;
+      el.addEventListener('click', () => toggleSnap(key, i, el, color));
+      sbList.appendChild(el);
+    });
+  }
+
+  updateCountBadge();
+}
+
+function toggleSnap(key, i, el, color) {
+  if (selectedSnaps.has(key)) {
+    selectedSnaps.delete(key);
+    el.classList.remove('active');
+    el.style.removeProperty('--acc-bg');
+    el.style.removeProperty('--acc-border');
+    el.style.removeProperty('--acc-color');
+    el.querySelector('.snap-dot').style.background = '';
+  } else {
+    selectedSnaps.add(key);
+    el.classList.add('active');
+    el.style.setProperty('--acc-bg',     color + '14');
+    el.style.setProperty('--acc-border', color + '44');
+    el.style.setProperty('--acc-color',  color);
+    el.querySelector('.snap-dot').style.background = color;
+  }
+  updateCountBadge();
+  renderAll();
+}
+
+function selectAll() {
+  let i = 0;
+  [...selectedObras].sort().forEach(o => {
+    (snapsByObra[o] || []).forEach(d => selectedSnaps.add(o + '|' + d.s));
+  });
+  buildSidebar(); renderAll();
+}
+
+function clearAll() {
+  selectedSnaps.clear();
+  buildSidebar(); renderAll();
+}
+
+function updateCountBadge() {
+  const n = selectedSnaps.size;
+  document.getElementById('selCount').textContent = n;
+  document.getElementById('countLabel').textContent = `${n} snapshot${n !== 1 ? 's' : ''} selecionado${n !== 1 ? 's' : ''}`;
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function renderAll() {
+  const rows = getSelectedRows();
+  renderKPIs(rows);
+  renderChart();
+  renderTable(rows);
+  renderTableMensal(rows);
+  const n = selectedObras.size;
+  document.getElementById('hdInfo').textContent =
+    n === 0 ? '—' : n === 1 ? [...selectedObras][0] : `${n} empreendimentos`;
+}
+
+function getSelectedRows() {
+  // Iterar pelas chaves "obra|YYYY-MM" na ordem em que aparecem no sidebar
+  const rows = [];
+  let globalIdx = 0;
+  [...selectedObras].sort().forEach(obra => {
+    const allSnaps = snapsByObra[obra] || [];
+    allSnaps.forEach(d => {
+      const key = obra + '|' + d.s;
+      if (selectedSnaps.has(key)) {
+        rows.push({ ...d, _obra: obra, _key: key, _color: _D4_PAL[globalIdx % _D4_PAL.length] });
+        globalIdx++;
+      }
+    });
+  });
+  return rows;
+}
+
+// ─── KPIs ─────────────────────────────────────────────────────────────────────
+function fmtM(v) {
+  if (v >= 1e6) return 'R$'+(v/1e6).toFixed(1)+'M';
+  if (v >= 1e3) return 'R$'+(v/1e3).toFixed(0)+'K';
+  return 'R$'+v.toFixed(0);
+}
+function fmtFull(v) {
+  return 'R$ ' + Math.round(v).toLocaleString('pt-BR');
+}
+
+function renderKPIs(rows) {
+  const el = document.getElementById('kpiRow');
+  if (!rows.length) {
+    el.innerHTML = `<div class="kcard" style="grid-column:1/-1">
+      <div class="klbl">Aguardando seleção</div>
+      <div class="kval" style="font-size:14px;color:var(--muted)">← Clique em um ou mais snapshots na barra lateral</div>
+    </div>`;
+    return;
+  }
+
+  // Usar o snapshot mais recente como referência dos KPIs
+  const ref = rows[rows.length - 1];
+  const pct = ref.t > 0 ? (ref.r / ref.t * 100).toFixed(1) : '0.0';
+
+  el.innerHTML = `
+    <div class="kcard" style="--kacc:#f5a623">
+      <div class="klbl">Total Tendência</div>
+      <div class="kval">${fmtM(ref.t)}</div>
+      <div class="ksub">Ref. ${ref._obra ? ref._obra + ' · ' : ''}snapshot ${ref.l}</div>
+    </div>
+    <div class="kcard" style="--kacc:var(--vl)">
+      <div class="klbl">Realizado</div>
+      <div class="kval">${fmtM(ref.r)}</div>
+      <div class="ksub">${pct}% do total</div>
+      <div class="kprog"><div class="kprog-bar" style="width:${Math.min(+pct,100)}%;background:var(--vl)"></div></div>
+    </div>
+    <div class="kcard" style="--kacc:#2a84d4">
+      <div class="klbl">A Realizar</div>
+      <div class="kval">${fmtM(ref.a)}</div>
+      <div class="ksub">${(100 - +pct).toFixed(1)}% do total</div>
+    </div>
+    <div class="kcard" style="--kacc:#888">
+      <div class="klbl">Snapshots</div>
+      <div class="kval">${rows.length}<span>selecionados</span></div>
+      <div class="ksub">${rows[0].l} → ${rows[rows.length-1].l}</div>
+    </div>
+  `;
+}
+
+// ─── CHART ───────────────────────────────────────────────────────────────────
+function fmtMes(ym) {
+  const [y, mo] = ym.split('-');
+  return _D4_MES[parseInt(mo) - 1] + '/' + y.slice(2);
+}
+
+function renderChart() {
+  if (chart) { chart.destroy(); chart = null; }
+  document.getElementById('legendArea').innerHTML = '';
+
+  const ini = document.getElementById('periodoIni').value;
+  const fim = document.getElementById('periodoFim').value;
+  const [iniF, fimF] = ini <= fim ? [ini, fim] : [fim, ini];
+
+  const rows = getSelectedRows();
+  renderTableMensal(rows); // sincroniza tabela ao mudar período
+  if (!rows.length) return;
+
+  // Sequência completa de meses do período (incluindo os zerados)
+  const meses = gerarMeses(iniF, fimF);
+  if (!meses.length) return;
+
+  const multiObraChart = [...new Set(rows.map(r => r._obra))].length > 1;
+  const datasets = rows.map(d => {
+    let vals = meses.map(m => (d.c[m] || 0) / 1e6);
+    if (viewMode === 'acumulado') {
+      let cum = 0;
+      vals = vals.map(v => { cum += v; return +cum.toFixed(3); });
+    }
+    return {
+      label: multiObraChart ? `${d._obra} · ${d.l}` : d.l,
+      data: vals,
+      borderColor: d._color,
+      backgroundColor: 'transparent',
+      borderWidth: 2.2,
+      pointRadius: meses.length > 48 ? 0 : 3,
+      pointHoverRadius: 5,
+      tension: 0.35,
+    };
+  });
+
+  const ctx = document.getElementById('chartMain').getContext('2d');
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: meses.map(fmtMes), datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 350 },
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1c1c1c',
+          borderColor: 'rgba(255,255,255,.07)',
+          borderWidth: 1,
+          titleColor: '#aaa',
+          bodyColor: '#999',
+          padding: 10,
+          callbacks: {
+            title: items => items[0].label,
+            label: ctx => ` ${ctx.dataset.label}: R$ ${ctx.raw.toFixed(2)}M`,
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,.035)' },
+          ticks: { color: '#444', font: { size: 10 }, maxRotation: 45, autoSkip: true, maxTicksLimit: 24 }
+        },
+        y: {
+          grid: { color: 'rgba(255,255,255,.035)' },
+          ticks: { color: '#444', font: { size: 10 }, callback: v => 'R$' + v.toFixed(1) + 'M' }
+        }
+      }
+    }
+  });
+
+  const multiObra = [...new Set(rows.map(r => r._obra))].length > 1;
+  const leg = document.getElementById('legendArea');
+  rows.forEach(d => {
+    const pct = d.t > 0 ? Math.round(d.r/d.t*100) : 0;
+    const label = multiObra ? `${d._obra} · ${d.l}` : d.l;
+    const div = document.createElement('div');
+    div.className = 'leg';
+    div.innerHTML = `
+      <div class="leg-line" style="background:${d._color}"></div>
+      <span style="color:${d._color};font-weight:600">${label}</span>
+      <span>— Real: ${fmtM(d.r)} · A Real: ${fmtM(d.a)} · Tend: ${fmtM(d.t)} · ${pct}%</span>
+    `;
+    leg.appendChild(div);
+  });
+
+  const obrasLabel = [...new Set(rows.map(r => r._obra))].join(', ');
+  document.getElementById('chartTitle').textContent =
+    `${obrasLabel} — ${viewMode === 'mensal' ? 'Competência Mensal' : 'Acumulado'}`;
+  document.getElementById('chartSub').textContent =
+    `${rows.length} curva${rows.length>1?'s':''} · período ${fmtMes(iniF)} → ${fmtMes(fimF)}`;
+}
+
+// ─── TABELA MÊS A MÊS ────────────────────────────────────────────────────────
+function setUnidMensal(u) {
+  unidMensal = u;
+  document.getElementById('btnUnidK').style.background = u==='k' ? 'rgba(132,225,21,.12)' : 'rgba(255,255,255,.04)';
+  document.getElementById('btnUnidK').style.borderColor = u==='k' ? 'rgba(132,225,21,.3)' : 'rgba(255,255,255,.06)';
+  document.getElementById('btnUnidK').style.color = u==='k' ? 'var(--vl)' : 'var(--muted)';
+  document.getElementById('btnUnidM').style.background = u==='m' ? 'rgba(132,225,21,.12)' : 'rgba(255,255,255,.04)';
+  document.getElementById('btnUnidM').style.borderColor = u==='m' ? 'rgba(132,225,21,.3)' : 'rgba(255,255,255,.06)';
+  document.getElementById('btnUnidM').style.color = u==='m' ? 'var(--vl)' : 'var(--muted)';
+  renderTableMensal(getSelectedRows());
+}
+
+function fmtVal(v) {
+  if (unidMensal === 'm') return v === 0 ? '—' : (v / 1e6).toFixed(2);
+  return v === 0 ? '—' : Math.round(v / 1e3).toLocaleString('pt-BR');
+}
+function unidLabel() { return unidMensal === 'm' ? 'R$ M' : 'R$ mil'; }
+
+// Formata célula de diferença: verde se positivo, vermelho se negativo
+function fmtDiffTd(val, borderStyle, bgBase, small = false) {
+  if (val === 0) {
+    return `<td style="${borderStyle}text-align:right;padding:5px 8px;color:var(--muted);font-size:${small?'10.5':'11'}px">—</td>`;
+  }
+  const pos   = val > 0;
+  const color = pos ? '#84E115' : '#f87171';
+  const bg    = pos ? 'rgba(132,225,21,.07)' : 'rgba(248,113,113,.07)';
+  const sign  = pos ? '+' : '−';
+  const abs   = fmtVal(Math.abs(val));
+  return `<td style="${borderStyle}text-align:right;padding:5px 8px;color:${color};font-weight:600;font-size:${small?'10.5':'11'}px;background:${bg}">${sign} ${abs}</td>`;
+}
+
+function renderTableMensal(rows) {
+  const card = document.getElementById('cardMensal');
+  if (!rows.length) { card.style.display = 'none'; return; }
+  card.style.display = '';
+
+  const ini = document.getElementById('periodoIni').value;
+  const fim = document.getElementById('periodoFim').value;
+  const [iniF, fimF] = ini <= fim ? [ini, fim] : [fim, ini];
+
+  // Todos os meses da curva completa (para subtotais por ano)
+  const todosMesesSet = new Set();
+  rows.forEach(d => Object.keys(d.c).forEach(m => todosMesesSet.add(m)));
+  const todosMeses = [...todosMesesSet].sort();
+  const todosAnos  = [...new Set(todosMeses.map(m => m.split('-')[0]))].sort();
+
+  // Sequência completa de meses do período filtrado (sem pular zeros)
+  const meses = gerarMeses(iniF, fimF);
+  if (!meses.length) { card.style.display = 'none'; return; }
+
+  // Anos presentes no período filtrado
+  const anosPerido = [...new Set(meses.map(m => m.split('-')[0]))].sort();
+
+  document.getElementById('tblMensalSub').textContent =
+    `Competência mensal em ${unidLabel()} · ${fmtMes(iniF)} → ${fmtMes(fimF)} · ${meses.length} meses`;
+
+  // ── Estilos reutilizáveis
+  const STH  = 'position:sticky;left:0;z-index:2;background:#1c1c1c;'; // sticky header
+  const STD  = 'position:sticky;left:0;z-index:1;background:#1c1c1c;'; // sticky data cell
+  const B_OR = 'border-left:1px solid rgba(245,166,35,.25);';          // borda laranja (tendência)
+  const B_AZ = 'border-left:1px solid rgba(42,132,212,.25);';           // borda azul (ano)
+  const B_VL = 'border-left:1px solid rgba(132,225,21,.2);';            // borda verde (período)
+  const B_YR = 'border-left:1px solid rgba(255,255,255,.06);';          // borda sutil (separador anos)
+
+  // ── CABEÇALHO LINHA 1: Snapshot | Tendência | Anos completos | [Anos período] | TOTAL período
+  let h1 = `<tr>
+    <th style="${STH}min-width:90px;padding:8px 10px;text-align:left">SNAPSHOT</th>
+    <th style="${B_OR}text-align:center;color:#f5a623;padding:6px 8px;font-size:9.5px;letter-spacing:.06em;min-width:80px">TENDÊNCIA<br>TOTAL</th>`;
+
+  // Sub-totais anuais (todos os anos da curva)
+  todosAnos.forEach(ano => {
+    h1 += `<th style="${B_AZ}text-align:center;color:#6ab3f5;padding:6px 8px;font-size:9.5px;letter-spacing:.06em;min-width:72px">${ano}</th>`;
+  });
+
+  // Período filtrado: agrupar por ano com colspan
+  anosPerido.forEach(ano => {
+    const count = meses.filter(m => m.startsWith(ano)).length;
+    h1 += `<th colspan="${count}" style="${B_YR}text-align:center;color:#888;padding:6px 4px;font-size:9.5px;letter-spacing:.05em">${ano}</th>`;
+  });
+
+  h1 += `<th style="${B_VL}text-align:center;color:rgba(132,225,21,.7);padding:6px 8px;font-size:9.5px;letter-spacing:.06em;min-width:80px">TOTAL<br>PERÍODO</th></tr>`;
+
+  // ── CABEÇALHO LINHA 2: labels detalhados
+  let h2 = `<tr>
+    <th style="${STH}"></th>
+    <th style="${B_OR}text-align:right;color:#888;padding:5px 8px;font-size:10px">${unidLabel()}</th>`;
+
+  todosAnos.forEach(ano => {
+    h2 += `<th style="${B_AZ}text-align:right;color:#888;padding:5px 8px;font-size:10px">${unidLabel()}</th>`;
+  });
+
+  meses.forEach((m, i) => {
+    const isFirst = i === 0 || meses[i-1].split('-')[0] !== m.split('-')[0];
+    h2 += `<th style="${isFirst ? B_YR : ''}text-align:right;min-width:72px;padding:5px 8px;color:var(--muted2);font-size:10px">${fmtMes(m)}</th>`;
+  });
+
+  h2 += `<th style="${B_VL}text-align:right;color:rgba(132,225,21,.5);padding:5px 8px;font-size:10px">${unidLabel()}</th></tr>`;
+
+  document.getElementById('tblMensalHead').innerHTML = h1 + h2;
+
+  // ── CORPO
+  let maxVal = 0;
+  rows.forEach(d => meses.forEach(m => { if ((d.c[m]||0) > maxVal) maxVal = d.c[m]||0; }));
+
+  const multiObraTbl = [...new Set(rows.map(r => r._obra))].length > 1;
+
+  let tbody = '';
+  rows.forEach(d => {
+    const snapLbl = multiObraTbl ? `${d.l}<br><span style="font-size:9px;font-weight:400;color:var(--muted)">${d._obra}</span>` : d.l;
+    // Tendência total (soma de todos os meses da curva completa)
+    const tendTotal = todosMeses.reduce((s, m) => s + (d.c[m] || 0), 0);
+
+    // Subtotais anuais (todos os anos, curva completa)
+    const anoTotals = {};
+    todosAnos.forEach(ano => {
+      anoTotals[ano] = todosMeses.filter(m => m.startsWith(ano)).reduce((s, m) => s + (d.c[m]||0), 0);
+    });
+
+    // Total do período filtrado
+    const totalPeriodo = meses.reduce((s, m) => s + (d.c[m] || 0), 0);
+
+    tbody += `<tr>
+      <td style="${STD}font-weight:700;color:${d._color};white-space:nowrap;padding:6px 10px">${snapLbl}</td>
+      <td class="sel-cell" data-val="${tendTotal}" data-snap="${d.l}" data-mes="Tendência Total"
+        style="${B_OR}text-align:right;padding:5px 8px;font-weight:600;color:#f5a623;background:rgba(245,166,35,.07)">${fmtVal(tendTotal)}</td>`;
+
+    // Subtotais por ano
+    todosAnos.forEach(ano => {
+      const v = anoTotals[ano];
+      tbody += `<td class="sel-cell" data-val="${v}" data-snap="${d.l}" data-mes="${ano}"
+        style="${B_AZ}text-align:right;padding:5px 8px;color:#6ab3f5;background:rgba(42,132,212,.06)">${fmtVal(v)}</td>`;
+    });
+
+    // Colunas mensais do período
+    meses.forEach((m, i) => {
+      const val = d.c[m] || 0;
+      const isFirst = i === 0 || meses[i-1].split('-')[0] !== m.split('-')[0];
+      const alpha = maxVal > 0 && val > 0 ? Math.max(0.07, val / maxVal * 0.35) : 0;
+      const bg = val > 0 ? `rgba(132,225,21,${alpha.toFixed(2)})` : 'transparent';
+      const selCls = val > 0 ? ' sel-cell' : '';
+      tbody += `<td class="td-data${selCls}" data-val="${val}" data-snap="${d.l}" data-mes="${fmtMes(m)}"
+        style="${isFirst ? B_YR : ''}text-align:right;padding:5px 8px;font-size:11.5px;background:${bg};color:${val>0?'var(--txt)':'var(--muted)'}">${fmtVal(val)}</td>`;
+    });
+
+    // Total período
+    tbody += `<td class="sel-cell" data-val="${totalPeriodo}" data-snap="${d.l}" data-mes="Total Período"
+      style="${B_VL}text-align:right;padding:5px 10px;font-weight:600;color:var(--vl)">${fmtVal(totalPeriodo)}</td></tr>`;
+  });
+
+  // ── Linhas de DIFERENÇA entre snapshots consecutivos (se >1)
+  if (rows.length > 1) {
+    for (let i = 1; i < rows.length; i++) {
+      const dA = rows[i - 1]; // snapshot anterior
+      const dB = rows[i];     // snapshot atual
+
+      // Tendência: diferença
+      const diffTend = todosMeses.reduce((s, m) => s + (dB.c[m]||0) - (dA.c[m]||0), 0);
+
+      const diffLabel = `${dB.l} − ${dA.l}`;
+
+      tbody += `<tr style="border-top:1px solid rgba(255,255,255,.06)">
+        <td style="${STD}font-weight:600;color:var(--muted2);padding:6px 10px;font-size:10.5px;white-space:nowrap;letter-spacing:.02em">
+          Δ ${diffLabel}
+        </td>`;
+
+      // Tendência total (diff)
+      tbody += fmtDiffTd(diffTend, B_OR, 'rgba(245,166,35,.04)');
+
+      // Subtotais anuais (diff)
+      todosAnos.forEach(ano => {
+        const diff = todosMeses.filter(m => m.startsWith(ano))
+          .reduce((s, m) => s + (dB.c[m]||0) - (dA.c[m]||0), 0);
+        tbody += fmtDiffTd(diff, B_AZ, 'rgba(42,132,212,.04)');
+      });
+
+      // Colunas mensais (diff)
+      meses.forEach((m, idx) => {
+        const isFirst = idx === 0 || meses[idx-1].split('-')[0] !== m.split('-')[0];
+        const diff = (dB.c[m]||0) - (dA.c[m]||0);
+        tbody += fmtDiffTd(diff, isFirst ? B_YR : '', 'transparent', true);
+      });
+
+      // Total período (diff)
+      const diffPeriodo = meses.reduce((s, m) => s + (dB.c[m]||0) - (dA.c[m]||0), 0);
+      tbody += fmtDiffTd(diffPeriodo, B_VL, 'transparent');
+
+      tbody += '</tr>';
+    }
+  }
+
+  document.getElementById('tblMensalBody').innerHTML = tbody;
+
+  // ── Eventos de clique nas células selecionáveis
+  clearCellSel();
+  document.querySelectorAll('#tblMensalBody .sel-cell').forEach(td => {
+    td.addEventListener('click', () => {
+      td.classList.toggle('selected');
+      updateSelPanel();
+    });
+  });
+}
+
+// ─── PAINEL DE SELEÇÃO DE CÉLULAS ────────────────────────────────────────────
+function clearCellSel() {
+  document.querySelectorAll('#tblMensalBody .sel-cell.selected').forEach(td => td.classList.remove('selected'));
+  document.getElementById('selPanel').style.display = 'none';
+}
+
+function fmtPainel(v) {
+  if (unidMensal === 'm') return v.toFixed(2);
+  return Math.round(v / 1e3).toLocaleString('pt-BR');
+}
+
+function updateSelPanel() {
+  const cells = [...document.querySelectorAll('#tblMensalBody .sel-cell.selected')];
+  const panel = document.getElementById('selPanel');
+
+  if (!cells.length) { panel.style.display = 'none'; return; }
+
+  const vals = cells.map(td => parseFloat(td.dataset.val) || 0);
+  const soma  = vals.reduce((s, v) => s + v, 0);
+  const media = soma / vals.length;
+  const maxx  = Math.max(...vals);
+  const unit  = unidLabel();
+
+  // Informação de quais snapshots/meses
+  const snaps = [...new Set(cells.map(td => td.dataset.snap))];
+  const meses = [...new Set(cells.map(td => td.dataset.mes))];
+  const detail = snaps.length === 1
+    ? `${snaps[0]} · ${cells.length} mes${cells.length > 1 ? 'es' : ''}`
+    : `${snaps.length} snapshots · ${cells.length} células`;
+
+  document.getElementById('spSoma').textContent  = fmtPainel(soma);
+  document.getElementById('spMedia').textContent = fmtPainel(media);
+  document.getElementById('spMax').textContent   = fmtPainel(maxx);
+  document.getElementById('spUnit').textContent  = unit;
+  document.getElementById('spUnit2').textContent = unit;
+  document.getElementById('spUnit3').textContent = unit;
+  document.getElementById('spCount').textContent = detail;
+
+  panel.style.display = 'block';
+}
+
+// ─── TABELA RESUMO ────────────────────────────────────────────────────────────
+function renderTable(rows) {
+  const tb = document.getElementById('tblBody');
+  if (!rows.length) {
+    tb.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--muted)">Nenhum snapshot selecionado</td></tr>';
+    return;
+  }
+  const multiObra = [...new Set(rows.map(r => r._obra))].length > 1;
+  tb.innerHTML = rows.map(d => {
+    const pctR = d.t > 0 ? (d.r / d.t * 100).toFixed(1) : '0.0';
+    const pctA = d.t > 0 ? (d.a / d.t * 100).toFixed(1) : '0.0';
+    const clsR = +pctR >= 90 ? 'pg' : +pctR >= 50 ? 'pa' : 'pb';
+    const clsA = +pctA <= 10 ? 'pg' : +pctA <= 50 ? 'pa' : 'pb';
+    const snapLabel = multiObra ? `<span style="color:var(--muted);font-size:10px;font-weight:400;display:block">${d._obra}</span>${d.l}` : d.l;
+    return `<tr>
+      <td style="font-weight:700;color:${d._color}">${snapLabel}</td>
+      <td style="color:#f5a623;font-weight:600">${fmtFull(d.t)}</td>
+      <td style="color:var(--vl)">${fmtFull(d.r)}</td>
+      <td><span class="pill ${clsR}">${pctR}%</span></td>
+      <td style="color:#6ab3f5">${fmtFull(d.a)}</td>
+      <td><span class="pill ${clsA}">${pctA}%</span></td>
+    </tr>`;
+  }).join('');
+}
+
+window.DB={toggleObrasMenu,filtrarObras,todasObras,limparObras,onAnoSnapChange,onMesSnapChange,selectAllYear,selectAll,clearAll,setView,setUnidMensal,clearCellSel};
+</script>
+<script>// ═══════════════════════════════════════════════════════════════
+//  ABA BP vs TENDÊNCIA — lógica completa
+//  Namespace: window.BP
+// ═══════════════════════════════════════════════════════════════
+
+(function() {
+'use strict';
+
+// ─── ESTADO ────────────────────────────────────────────────────
+let bpAno      = '2026';
+let bpBase     = '';   // snapshot da curva-base (BP)
+let bpTend     = '';   // snapshot da tendência
+let bpObras    = new Set();  // obras selecionadas no BP
+let bpVisao    = 'variacao'; // 'variacao' | 'base' | 'tendencia'
+let bpObs      = {};  // { nomeObra: texto } — observações editáveis
+
+const MES_PT   = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+function fmtMes(ym) {
+  const [y, m] = ym.split('-');
+  return MES_PT[parseInt(m) - 1] + '/' + y.slice(2);
+}
+
+function fmtV(v) {
+  if (v === 0) return '0K';
+  const a = Math.abs(v);
+  if (a >= 1e6)  return (v/1e6).toFixed(1) + 'M';
+  if (a >= 1e3)  return Math.round(v/1e3) + 'K';
+  return Math.round(v).toString();
+}
+
+function fmtFull(v) {
+  return 'R$ ' + Math.round(v).toLocaleString('pt-BR');
+}
+
+// ─── INIT ───────────────────────────────────────────────────────
+function init() {
+  // Anos disponíveis
+  const anos = [...new Set(DATA.map(d => d.s.slice(0,4)))].sort();
+  const selAno = document.getElementById('bp-selAno');
+  anos.forEach(a => selAno.add(new Option(a, a)));
+  bpAno = anos[anos.length - 1];
+  selAno.value = bpAno;
+
+  onAnoChange();
+}
+
+// ─── CONTROLES ─────────────────────────────────────────────────
+function onAnoChange() {
+  bpAno = document.getElementById('bp-selAno').value;
+  bpObras.clear();
+
+  // Todos os snapshots disponíveis (não filtrar pelo ano)
+  const todosSnaps = [...new Set(DATA.map(d => d.s))].sort();
+
+  const selBase = document.getElementById('bp-selBase');
+  const prevBase = selBase.value;
+  selBase.innerHTML = '';
+  todosSnaps.forEach(s => selBase.add(new Option(fmtMes(s), s)));
+  // Default: segundo snapshot do ano selecionado (fev) ou primeiro do ano
+  const snapsDoAno = todosSnaps.filter(s => s.startsWith(bpAno));
+  bpBase = snapsDoAno[1] || snapsDoAno[0] || todosSnaps[0];
+  selBase.value = bpBase;
+
+  const selTend = document.getElementById('bp-selTend');
+  selTend.innerHTML = '';
+  todosSnaps.forEach(s => selTend.add(new Option(fmtMes(s), s)));
+  // Default: último snapshot do ano selecionado
+  bpTend = snapsDoAno[snapsDoAno.length - 1] || todosSnaps[todosSnaps.length - 1];
+  selTend.value = bpTend;
+
+  // Carregar obras salvas ou auto-selecionar
+  const loaded = loadObrasFromStorage();
+  if (!loaded) {
+    DATA.filter(d => d.s === bpBase).forEach(d => {
+      const tot = Object.entries(d.c).filter(([k]) => k.startsWith(bpAno)).reduce((s,[,v]) => s+v, 0);
+      if (tot > 0) bpObras.add(d.e);
+    });
+  }
+
+  buildObrasLista('');
+  buildObrasChips();
+  render();
+}
+
+function onBaseChange() {
+  bpBase = document.getElementById('bp-selBase').value;
+  // Reconstruir lista de obras (base nova pode ter obras diferentes)
+  buildObrasLista('');
+  buildObrasChips();
+  render();
+}
+
+function onTendChange() {
+  bpTend = document.getElementById('bp-selTend').value;
+  render();
+}
+
+function setVisao(v) { /* removido — tudo visível em uma página */ }
+
+// ─── LOCALSTORAGE ──────────────────────────────────────────────
+function storageKey() { return `bp_obras_${bpAno}`; }
+
+function saveObrasToStorage() {
+  try {
+    localStorage.setItem(storageKey(), JSON.stringify([...bpObras]));
+    showSaveStatus('✓ Salvo', '#84E115');
+  } catch(e) {
+    showSaveStatus('Erro ao salvar', '#f87171');
+  }
+}
+
+function loadObrasFromStorage() {
+  try {
+    const saved = localStorage.getItem(storageKey());
+    if (saved) {
+      const arr = JSON.parse(saved);
+      bpObras = new Set(arr.filter(e => DATA.some(d => d.e === e)));
+      return bpObras.size > 0;
+    }
+  } catch(e) {}
+  return false;
+}
+
+function showSaveStatus(msg, color) {
+  const lbl = document.getElementById('bp-saveLabel');
+  const icon = document.getElementById('bp-saveIcon');
+  if (!lbl) return;
+  lbl.textContent = msg;
+  lbl.style.color = color;
+  icon.textContent = '✓';
+  icon.style.color = color;
+  clearTimeout(showSaveStatus._t);
+  showSaveStatus._t = setTimeout(() => {
+    lbl.textContent = `${bpObras.size} obras salvas`;
+    lbl.style.color = 'var(--muted)';
+    icon.textContent = '💾';
+    icon.style.color = 'var(--muted)';
+  }, 2000);
+}
+
+// ─── DROPDOWN DE OBRAS ─────────────────────────────────────────
+function toggleObrasMenu() {
+  const m = document.getElementById('bp-menuObras');
+  const open = m.style.display === 'block';
+  m.style.display = open ? 'none' : 'block';
+  if (!open) {
+    document.getElementById('bp-filtroObras').value = '';
+    buildObrasLista('');
+    document.getElementById('bp-filtroObras').focus();
+  }
+}
+
+function filtrarObrasMenu(v) { buildObrasLista(v); }
+
+function buildObrasLista(filtro = '') {
+  const lower = filtro.toLowerCase();
+  const lista = document.getElementById('bp-listaObras');
+  lista.innerHTML = '';
+  const obras = [...new Set(DATA.map(d => d.e))].sort();
+  const visiveis = obras.filter(e => !filtro || e.toLowerCase().includes(lower));
+
+  // Obras com snapshot base disponível ficam no topo
+  const temBase = visiveis.filter(e => DATA.some(d => d.e === e && d.s === bpBase));
+  const semBase = visiveis.filter(e => !DATA.some(d => d.e === e && d.s === bpBase));
+
+  const renderItem = (e, disabled) => {
+    const div = document.createElement('div');
+    div.style.cssText = `display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;
+      cursor:${disabled?'default':'pointer'};font-size:12px;opacity:${disabled?'.35':'1'};transition:background .1s`;
+    if (!disabled) {
+      div.onmouseenter = () => div.style.background = 'rgba(255,255,255,.04)';
+      div.onmouseleave = () => div.style.background = '';
+    }
+    const chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.checked = bpObras.has(e);
+    chk.disabled = disabled;
+    chk.style.cssText = 'accent-color:#84E115;width:13px;height:13px;cursor:pointer;flex-shrink:0';
+    chk.addEventListener('change', () => {
+      if (chk.checked) bpObras.add(e); else bpObras.delete(e);
+      buildObrasLista(filtro);
+      updateObrasLabel();
+      buildObrasChips();
+      saveObrasToStorage();
+      render();
+    });
+    const lbl = document.createElement('span');
+    lbl.textContent = e;
+    lbl.style.cssText = 'flex:1;color:var(--txt)';
+    if (!disabled) lbl.style.cursor = 'pointer';
+    if (!disabled) lbl.onclick = () => { chk.checked = !chk.checked; chk.dispatchEvent(new Event('change')); };
+    div.appendChild(chk); div.appendChild(lbl);
+    lista.appendChild(div);
+  };
+
+  if (temBase.length) {
+    if (!filtro) {
+      const sep = document.createElement('div');
+      sep.style.cssText = 'font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--muted);padding:4px 8px 2px;text-transform:uppercase';
+      sep.textContent = `Com snapshot ${fmtMes(bpBase)}`;
+      lista.appendChild(sep);
+    }
+    temBase.forEach(e => renderItem(e, false));
+  }
+  if (semBase.length && !filtro) {
+    const sep = document.createElement('div');
+    sep.style.cssText = 'font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--muted);padding:8px 8px 2px;text-transform:uppercase';
+    sep.textContent = 'Sem snapshot base';
+    lista.appendChild(sep);
+    semBase.forEach(e => renderItem(e, true));
+  } else {
+    semBase.forEach(e => renderItem(e, true));
+  }
+}
+
+function updateObrasLabel() {
+  const n = bpObras.size;
+  const total = [...new Set(DATA.filter(d => d.s === bpBase).map(d => d.e))].length;
+  document.getElementById('bp-labelObras').textContent =
+    n === 0 ? 'Selecionar obras...' :
+    n === total ? `Todas (${n})` :
+    `${n} de ${total} obras`;
+}
+
+// Fechar menu ao clicar fora
+document.addEventListener('click', e => {
+  if (!e.target.closest('#bp-wrapObras')) {
+    const m = document.getElementById('bp-menuObras');
+    if (m) m.style.display = 'none';
+  }
+});
+
+// ─── CHIPS COMPACTOS ───────────────────────────────────────────
+function buildObrasChips() {
+  const area = document.getElementById('bp-obrasChips');
+  area.innerHTML = '';
+  [...bpObras].sort().forEach(e => {
+    const chip = document.createElement('div');
+    chip.style.cssText = `display:inline-flex;align-items:center;gap:4px;padding:3px 8px;
+      border-radius:20px;background:rgba(132,225,21,.1);border:1px solid rgba(132,225,21,.25);
+      color:var(--vl);font-size:10.5px;font-weight:600;white-space:nowrap`;
+    chip.innerHTML = `${e} <span style="cursor:pointer;opacity:.6;margin-left:2px;font-size:12px" 
+      onclick="BP.removeObra('${e.replace(/'/g,"\\'")}')">×</span>`;
+    area.appendChild(chip);
+  });
+  updateObrasLabel();
+  const lbl = document.getElementById('bp-saveLabel');
+  if (lbl) lbl.textContent = `${bpObras.size} obras salvas`;
+}
+
+function removeObra(e) {
+  bpObras.delete(e);
+  buildObrasChips();
+  buildObrasLista('');
+  updateObrasLabel();
+  saveObrasToStorage();
+  render();
+}
+
+function selectTodasObras() {
+  DATA.filter(d => d.s === bpBase).forEach(d => bpObras.add(d.e));
+  buildObrasLista('');
+  buildObrasChips();
+  saveObrasToStorage();
+  render();
+}
+
+function clearObras() {
+  bpObras.clear();
+  buildObrasLista('');
+  buildObrasChips();
+  saveObrasToStorage();
+  render();
+}
+
+// ─── DADOS ─────────────────────────────────────────────────────
+function getSnap(obra, snap) {
+  return DATA.find(d => d.e === obra && d.s === snap) || null;
+}
+
+function getMesesAno() {
+  // Usar sempre o ano do ciclo BP (select), não o ano da curva base
+  const sel = document.getElementById('bp-selAno');
+  const ano = sel ? sel.value : bpAno;
+  return Array.from({length: 12}, (_, i) => `${ano}-${String(i+1).padStart(2,'0')}`);
+}
+
+function totalAno(snap) {
+  if (!snap) return 0;
+  return getMesesAno().reduce((s, m) => s + (snap.c[m] || 0), 0);
+}
+
+// ─── RENDER PRINCIPAL ──────────────────────────────────────────
+function render() {
+  const obras = [...bpObras].sort();
+  document.getElementById('bp-obrasInfo').textContent =
+    `${obras.length} obras selecionadas`;
+  document.getElementById('bp-hdInfo').textContent =
+    `BP ${fmtMes(bpBase)} vs Tendência ${fmtMes(bpTend)}`;
+
+  renderKPIs(obras);
+  renderVariacao(obras);
+  renderCurva(obras, bpBase,  'bp-baseWrap', 'bp-baseSub');
+  renderCurva(obras, bpTend, 'bp-tendWrap', 'bp-tendSub');
+}
+
+// ─── KPIs ───────────────────────────────────────────────────────
+function renderKPIs(obras) {
+  const totBP   = obras.reduce((s, e) => s + totalAno(getSnap(e, bpBase)), 0);
+  const totTend = obras.reduce((s, e) => s + totalAno(getSnap(e, bpTend)), 0);
+  const delta   = totTend - totBP;
+  const deltaPct = totBP > 0 ? (delta/totBP*100).toFixed(1) : '0.0';
+  const deltaColor = delta >= 0 ? '#84E115' : '#f87171';
+  const sign = delta >= 0 ? '+' : '';
+
+  // Obras com desvio
+  const comDesvio = obras.filter(e => {
+    const b = totalAno(getSnap(e, bpBase));
+    const t = totalAno(getSnap(e, bpTend));
+    return Math.abs(t - b) > 1000;
+  }).length;
+
+  document.getElementById('bp-kpiRow').innerHTML = `
+    <div class="kcard" style="--kacc:#f5a623">
+      <div class="klbl">Meta BP ${fmtMes(bpBase)}</div>
+      <div class="kval" style="color:#f5a623">${(totBP/1e6).toFixed(1)}M</div>
+      <div class="ksub">${obras.length} obras · ano ${bpAno}</div>
+    </div>
+    <div class="kcard" style="--kacc:var(--vl)">
+      <div class="klbl">Tendência ${fmtMes(bpTend)}</div>
+      <div class="kval" style="color:var(--vl)">${(totTend/1e6).toFixed(1)}M</div>
+      <div class="ksub">${obras.length} obras · ano ${bpAno}</div>
+    </div>
+    <div class="kcard" style="--kacc:${deltaColor}">
+      <div class="klbl">Desvio R$</div>
+      <div class="kval" style="color:${deltaColor}">${sign}${(delta/1e6).toFixed(1)}M</div>
+      <div class="ksub">${sign}${deltaPct}% em relação ao BP</div>
+    </div>
+    <div class="kcard" style="--kacc:#2a84d4">
+      <div class="klbl">Desvio %</div>
+      <div class="kval" style="color:${deltaColor};font-size:24px">${sign}${deltaPct}%</div>
+      <div class="ksub">${fmtMes(bpBase)} → ${fmtMes(bpTend)}</div>
+    </div>
+    <div class="kcard" style="--kacc:#888">
+      <div class="klbl">Obras c/ Desvio</div>
+      <div class="kval">${comDesvio}<span>de ${obras.length}</span></div>
+      <div class="ksub">${obras.length - comDesvio} obras em linha</div>
+    </div>
+  `;
+}
+
+// ─── TABELA VARIAÇÃO ───────────────────────────────────────────
+let varSortCol = 'delta'; // coluna de ordenação atual
+let varSortAsc = false;
+
+function renderVariacao(obras) {
+  // Subtítulo
+  const subEl = document.getElementById('bp-varSub');
+  if (subEl) subEl.textContent =
+    `Comparativo anual ${bpAno} · ${fmtMes(bpBase)} (meta) vs ${fmtMes(bpTend)} (tendência) · clique no cabeçalho para ordenar`;
+
+  let totBP = 0, totTend = 0;
+  const totGeral = obras.reduce((s, e) => s + totalAno(getSnap(e, bpBase)), 0);
+
+  let rows = obras.map(e => {
+    const snapB = getSnap(e, bpBase);
+    const snapT = getSnap(e, bpTend);
+    const vBP   = totalAno(snapB);
+    const vTend = totalAno(snapT);
+    const delta = vTend - vBP;
+    const pct   = vBP > 0 ? (delta/vBP*100).toFixed(1) : '0.0';
+    const part  = totGeral > 0 ? (vBP/totGeral*100).toFixed(1) : '0.0';
+    totBP  += vBP;
+    totTend += vTend;
+    return { e, vBP, vTend, delta, pct: parseFloat(pct), part: parseFloat(part) };
+  });
+
+  // Ordenação
+  rows.sort((a, b) => {
+    let va = a[varSortCol], vb = b[varSortCol];
+    if (varSortCol === 'e') { va = a.e.toLowerCase(); vb = b.e.toLowerCase(); }
+    return varSortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+  });
+
+  const totDelta = totTend - totBP;
+  const totPct   = totBP > 0 ? (totDelta/totBP*100).toFixed(1) : '0.0';
+
+  // Threshold de desvio significativo: >1% ou >500K
+  function isDesvio(r) { return Math.abs(r.delta) > 500000 || Math.abs(r.pct) > 1; }
+
+  function thIcon(col) {
+    if (col !== varSortCol) return '<span style="color:#333;margin-left:3px">⇅</span>';
+    return varSortAsc
+      ? '<span style="color:var(--vl);margin-left:3px">↑</span>'
+      : '<span style="color:var(--vl);margin-left:3px">↓</span>';
+  }
+  function thStyle(col) {
+    return `cursor:pointer;user-select:none;${col===varSortCol?'color:var(--vl)!important':''}`;
+  }
+  function sortBy(col) {
+    if (varSortCol === col) varSortAsc = !varSortAsc;
+    else { varSortCol = col; varSortAsc = false; }
+    renderVariacao(obras);
+  }
+
+  const thead = `<thead><tr>
+    <th onclick="BP._sortVar('e')"    style="text-align:left;min-width:180px;${thStyle('e')}">Obra${thIcon('e')}</th>
+    <th onclick="BP._sortVar('vBP')"  style="${thStyle('vBP')}">BP ${fmtMes(bpBase)}${thIcon('vBP')}</th>
+    <th onclick="BP._sortVar('vTend')" style="${thStyle('vTend')}">Tendência ${fmtMes(bpTend)}${thIcon('vTend')}</th>
+    <th onclick="BP._sortVar('delta')" style="${thStyle('delta')}">Δ R$${thIcon('delta')}</th>
+    <th onclick="BP._sortVar('pct')"  style="${thStyle('pct')}">Δ %${thIcon('pct')}</th>
+    <th onclick="BP._sortVar('part')" style="${thStyle('part')}">Part.%${thIcon('part')}</th>
+    <th style="min-width:220px;text-align:left">Observações</th>
+  </tr></thead>`;
+
+  const tbody = rows.map(r => {
+    const desvio = isDesvio(r);
+    const dc = r.delta > 500000 ? '#84E115' : r.delta < -500000 ? '#f87171' : '#888';
+    const sign = r.delta >= 0 ? '+' : '';
+    const obs = bpObs[r.e] || '';
+    // Destaque de linha para obras com desvio significativo
+    const rowBg = desvio
+      ? r.delta > 0 ? 'background:rgba(132,225,21,.04)' : 'background:rgba(248,113,113,.04)'
+      : '';
+    // Barra de participação
+    const barW = Math.min(r.part, 100);
+    return `<tr style="border-bottom:1px solid rgba(255,255,255,.025);${rowBg}">
+      <td style="font-weight:600;color:${desvio?(r.delta>0?'#84E115':'#f87171'):'var(--txt)'};padding:6px 10px;white-space:nowrap">
+        ${desvio ? `<span style="margin-right:5px;font-size:10px">${r.delta>0?'▲':'▼'}</span>` : ''}${r.e}
+      </td>
+      <td style="color:#f5a623;font-weight:600">${fmtFull(r.vBP)}</td>
+      <td style="color:var(--vl)">${fmtFull(r.vTend)}</td>
+      <td style="color:${dc};font-weight:600">${sign}${fmtFull(r.delta)}</td>
+      <td><span class="pill ${r.delta>500000?'pg':r.delta<-500000?'pr':'pa'}">${sign}${r.pct.toFixed(1)}%</span></td>
+      <td style="padding:6px 10px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="width:40px;height:3px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;flex-shrink:0">
+            <div style="width:${barW}%;height:100%;background:#f5a623;opacity:.7;border-radius:99px"></div>
+          </div>
+          <span style="font-size:10.5px;color:var(--muted2)">${r.part.toFixed(1)}%</span>
+        </div>
+      </td>
+      <td style="padding:5px 10px">
+        <input type="text" value="${obs}" placeholder="Observações..." data-obra="${r.e.replace(/"/g,'&quot;')}"
+          oninput="BP.saveObs(this)"
+          style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:var(--txt);
+                 padding:4px 8px;border-radius:5px;font-size:11px;width:100%;font-family:'DM Sans',sans-serif;outline:none"
+          onfocus="this.style.borderColor='rgba(132,225,21,.3)'"
+          onblur="this.style.borderColor='rgba(255,255,255,.07)'">
+      </td>
+    </tr>`;
+  }).join('');
+
+  const totDc = totDelta > 0 ? '#84E115' : totDelta < 0 ? '#f87171' : '#888';
+  const totSign = totDelta >= 0 ? '+' : '';
+  const tfoot = `<tr style="border-top:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02)">
+    <td style="font-weight:700;color:var(--muted2);font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:6px 10px">TOTAL ${bpAno}</td>
+    <td style="color:#f5a623;font-weight:700">${fmtFull(totBP)}</td>
+    <td style="color:var(--vl);font-weight:700">${fmtFull(totTend)}</td>
+    <td style="color:${totDc};font-weight:700">${totSign}${fmtFull(totDelta)}</td>
+    <td><span class="pill ${totDelta>0?'pg':totDelta<0?'pr':'pa'}">${totSign}${totPct}%</span></td>
+    <td style="color:var(--vl);font-weight:700;padding:6px 10px">100%</td>
+    <td></td>
+  </tr>`;
+
+  const fullTable = `<table style="width:100%;border-collapse:collapse;font-size:12px">
+    ${thead}<tbody>${tbody}${tfoot}</tbody>
+  </table>`;
+  document.getElementById('bp-varWrap').innerHTML = fullTable;
+}
+
+function saveObs(input) {
+  bpObs[input.dataset.obra] = input.value;
+}
+
+// ─── TABELA CURVA MÊS A MÊS ────────────────────────────────────
+let curvaSortCol = {};  // { [wrapId]: coluna }
+let curvaSortAsc = {};
+
+function renderCurva(obras, snapKey, wrapId, subId) {
+  const meses = getMesesAno();
+  const isBase = snapKey === bpBase;
+  const cor = isBase ? '#f5a623' : 'var(--vl)';
+  const label = isBase ? `BP ${fmtMes(bpBase)}` : `Tendência ${fmtMes(bpTend)}`;
+  const sortCol = curvaSortCol[wrapId] || 'total';
+  const sortAsc = curvaSortAsc[wrapId] || false;
+
+  document.getElementById(subId).textContent =
+    `${label} · ${bpAno} · ${obras.length} obras · clique no cabeçalho para ordenar`;
+
+  // Calcular valores por obra
+  let rows = obras.map(e => {
+    const snap = getSnap(e, snapKey);
+    const tot = totalAno(snap);
+    const vals = {};
+    meses.forEach(m => { vals[m] = snap ? (snap.c[m] || 0) : 0; });
+    return { e, tot, vals };
+  });
+
+  // Ordenar
+  rows.sort((a, b) => {
+    let va = sortCol === 'e' ? a.e.toLowerCase() : sortCol === 'total' ? a.tot : (a.vals[sortCol]||0);
+    let vb = sortCol === 'e' ? b.e.toLowerCase() : sortCol === 'total' ? b.tot : (b.vals[sortCol]||0);
+    return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+  });
+
+  // Calcular totais mensais e max para heatmap
+  let totMes = {}; meses.forEach(m => totMes[m] = 0);
+  let totGeral = 0, maxVal = 0;
+  rows.forEach(r => {
+    totGeral += r.tot;
+    meses.forEach(m => { totMes[m] += r.vals[m]; if (r.vals[m] > maxVal) maxVal = r.vals[m]; });
+  });
+
+  // Linha Δ (só na tabela de tendência, comparando com BP)
+  const showDelta = !isBase;
+  const snapBData = {};
+  if (showDelta) {
+    obras.forEach(e => {
+      const sB = getSnap(e, bpBase);
+      snapBData[e] = {};
+      meses.forEach(m => { snapBData[e][m] = sB ? (sB.c[m]||0) : 0; });
+    });
+  }
+
+  function thIcon2(col) {
+    if (col !== sortCol) return '<span style="color:#333;margin-left:2px">⇅</span>';
+    return sortAsc ? '<span style="color:var(--vl);margin-left:2px">↑</span>' : '<span style="color:var(--vl);margin-left:2px">↓</span>';
+  }
+  function thClick(col) {
+    return `onclick="BP._sortCurva('${wrapId}','${col}')"`;
+  }
+  const thBase = `style="cursor:pointer;user-select:none;text-align:right;min-width:72px;background:var(--bg3);padding:7px 8px;font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--muted2);text-transform:uppercase;border-bottom:1px solid var(--b1);white-space:nowrap"`;
+
+  let head = `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11.5px"><thead><tr>
+    <th ${thClick('e')} style="cursor:pointer;user-select:none;text-align:left;min-width:180px;background:var(--bg3);padding:7px 10px;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--b1);position:sticky;left:0;z-index:2">
+      OBRA${thIcon2('e')}</th>`;
+
+  meses.forEach(m => {
+    head += `<th ${thClick(m)} ${thBase}>${fmtMes(m)}${thIcon2(m)}</th>`;
+  });
+  head += `<th ${thClick('total')} style="cursor:pointer;user-select:none;text-align:right;min-width:90px;background:var(--bg3);padding:7px 10px;font-size:9px;font-weight:700;letter-spacing:.06em;color:${cor};text-transform:uppercase;border-bottom:1px solid var(--b1);border-left:1px solid rgba(132,225,21,.15)">
+    TOTAL${thIcon2('total')}</th></tr></thead><tbody>`;
+
+  const rowsHtml = rows.map(r => {
+    const cells = meses.map(m => {
+      const v = r.vals[m];
+      const alpha = maxVal > 0 && v > 0 ? Math.max(0.07, v/maxVal*0.4) : 0;
+      const bg = v > 0 ? `rgba(132,225,21,${alpha.toFixed(2)})` : 'transparent';
+      return `<td style="text-align:right;padding:5px 8px;background:${bg};color:${v>0?'var(--txt)':'var(--muted)'}">${fmtV(v)}</td>`;
+    }).join('');
+
+    // Linha Δ por obra (na tabela de tendência)
+    let deltaRow = '';
+    if (showDelta) {
+      const dCells = meses.map(m => {
+        const d = r.vals[m] - (snapBData[r.e]?.[m] || 0);
+        if (d === 0) return `<td style="text-align:right;padding:3px 8px;color:var(--muted);font-size:10px">—</td>`;
+        const c = d > 0 ? 'rgba(132,225,21,.8)' : 'rgba(248,113,113,.8)';
+        const s = d > 0 ? '+' : '';
+        return `<td style="text-align:right;padding:3px 8px;font-size:10px;font-weight:600;color:${c}">${s}${fmtV(d)}</td>`;
+      }).join('');
+      const dTot = r.tot - (snapBData[r.e] ? meses.reduce((s,m)=>s+(snapBData[r.e][m]||0),0) : 0);
+      const dTotC = dTot > 0 ? 'rgba(132,225,21,.8)' : dTot < 0 ? 'rgba(248,113,113,.8)' : 'var(--muted)';
+      const dS = dTot > 0 ? '+' : '';
+      deltaRow = `<tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+        <td style="font-size:9.5px;color:var(--muted);padding:2px 10px 5px;position:sticky;left:0;background:var(--card);z-index:1;white-space:nowrap">Δ vs BP</td>
+        ${dCells}
+        <td style="text-align:right;padding:3px 10px 5px;font-size:10px;font-weight:700;color:${dTotC};border-left:1px solid rgba(132,225,21,.15)">${dS}${fmtV(dTot)}</td>
+      </tr>`;
+    }
+
+    return `<tr style="border-bottom:${showDelta?'none':'1px solid rgba(255,255,255,.025)'}">
+      <td style="font-weight:600;color:var(--txt);padding:6px 10px;position:sticky;left:0;background:var(--card);z-index:1;white-space:nowrap">${r.e}</td>
+      ${cells}
+      <td style="text-align:right;padding:5px 10px;font-weight:600;color:${cor};border-left:1px solid rgba(132,225,21,.15)">${fmtV(r.tot)}</td>
+    </tr>${deltaRow}`;
+  }).join('');
+
+  const totCells = meses.map(m =>
+    `<td style="text-align:right;padding:6px 8px;font-weight:700;color:${cor}">${fmtV(totMes[m])}</td>`
+  ).join('');
+
+  // Linha Δ Total (só na tabela de tendência)
+  let tfootDelta = '';
+  if (showDelta) {
+    // Totais mensais do BP
+    const totMesBP = {};
+    meses.forEach(m => {
+      totMesBP[m] = rows.reduce((s, r) => s + (snapBData[r.e]?.[m] || 0), 0);
+    });
+    const totGeralBP = meses.reduce((s, m) => s + (totMesBP[m] || 0), 0);
+
+    const dCells = meses.map(m => {
+      const d = (totMes[m] || 0) - (totMesBP[m] || 0);
+      if (d === 0) return `<td style="text-align:right;padding:5px 8px;color:var(--muted);font-weight:600">—</td>`;
+      const c = d > 0 ? '#84E115' : '#f87171';
+      const s = d > 0 ? '+' : '';
+      return `<td style="text-align:right;padding:5px 8px;font-weight:700;color:${c}">${s}${fmtV(d)}</td>`;
+    }).join('');
+
+    const dTot = totGeral - totGeralBP;
+    const dTotC = dTot > 0 ? '#84E115' : dTot < 0 ? '#f87171' : 'var(--muted)';
+    const dS = dTot > 0 ? '+' : '';
+
+    tfootDelta = `<tr style="border-top:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.01)">
+      <td style="font-weight:700;color:var(--muted2);padding:6px 10px;position:sticky;left:0;background:#1a1d1f;z-index:1;font-size:10px;text-transform:uppercase;letter-spacing:.04em">Δ TOTAL</td>
+      ${dCells}
+      <td style="text-align:right;padding:6px 10px;font-weight:700;color:${dTotC};border-left:1px solid rgba(132,225,21,.15)">${dS}${fmtV(dTot)}</td>
+    </tr>`;
+  }
+
+  const tfoot = `<tr style="border-top:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02)">
+    <td style="font-weight:700;color:var(--muted2);padding:6px 10px;position:sticky;left:0;background:#1e2022;z-index:1;font-size:11px;text-transform:uppercase;letter-spacing:.04em">TOTAL MÊS</td>
+    ${totCells}
+    <td style="text-align:right;padding:6px 10px;font-weight:700;color:${cor};border-left:1px solid rgba(132,225,21,.15)">${fmtV(totGeral)}</td>
+  </tr>${tfootDelta}`;
+
+  document.getElementById(wrapId).innerHTML = head + rowsHtml + tfoot + '</tbody></table></div>';
+}
+
+// ─── EXPOSIÇÃO PÚBLICA ─────────────────────────────────────────
+window.BP = {
+  init,
+  onAnoChange, onBaseChange, onTendChange,
+  setVisao,
+  toggleObrasMenu, filtrarObrasMenu,
+  selectTodasObras, clearObras, removeObra,
+  saveObs,
+  _sortVar(col) {
+    if (varSortCol === col) varSortAsc = !varSortAsc;
+    else { varSortCol = col; varSortAsc = false; }
+    renderVariacao([...bpObras].sort());
+  },
+  _sortCurva(wrapId, col) {
+    if ((curvaSortCol[wrapId]||'total') === col) curvaSortAsc[wrapId] = !curvaSortAsc[wrapId];
+    else { curvaSortCol[wrapId] = col; curvaSortAsc[wrapId] = false; }
+    const obras = [...bpObras].sort();
+    const snapKey = wrapId === 'bp-baseWrap' ? bpBase : bpTend;
+    const subId   = wrapId === 'bp-baseWrap' ? 'bp-baseSub' : 'bp-tendSub';
+    renderCurva(obras, snapKey, wrapId, subId);
+  },
+};
+
+// Auto-init quando o DOM carregar
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  // DOM já carregou (caso seja injetado dinamicamente)
+  setTimeout(init, 0);
+}
+
+})();
+</script>
+</body>
+</html>
